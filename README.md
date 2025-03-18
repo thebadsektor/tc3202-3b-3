@@ -114,7 +114,9 @@ Explain the structure of the project directory. Example:
 List all the team members involved in the project. Include their roles and responsibilities:
 
 - **Antopina, Junie A**: Lead Developer, Backend Developer
-- **Antopina, Junie A**: Frontend Developer, UI/UX Designer
+- **Delos Reyes, Genesis**: Backend Developer
+- **Gabot, Angelo**: Frontend Developer, UI/UX Designer
+- **Dolorico, Nicole**: Documentation
 - **Gerald Villaran**: Course Instructor
 
 ## Project Timeline
