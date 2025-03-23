@@ -1,4 +1,4 @@
-# TC-3202 [Project Title]
+# TC-3202 Political View Recommendation System 
 
 ![Project Banner](https://via.placeholder.com/1200x400.png?text=Project+Banner+Placeholder)
 
