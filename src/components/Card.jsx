@@ -13,8 +13,8 @@ function Card({ title, content, className }) { // Add className prop
 function CardLayout() {
   return (
     <div className="card-container">
-      <Card title="Card 1" content="This is the content of Card 1. It can be any text or component." className="card-blue" />
-      <Card title="Card 2" content="This is the content of Card 2. It can also be any text or component." className="card-green" />
+      <Card title="Card 1" content="This is the content of Card 1. It can be any text or component." className="card-one" />
+      <Card title="Card 2" content="This is the content of Card 2. It can also be any text or component." className="card-two" />
     </div>
   );
 }
