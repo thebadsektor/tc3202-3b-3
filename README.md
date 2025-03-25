@@ -115,7 +115,7 @@ List all the team members involved in the project. Include their roles and respo
 
 - **Antopina, Junie A**: Lead Developer, Backend Developer
 - **Delos Reyes, Genesis**: Backend Developer
-- **Gabot, Angelo**: Frontend Developer, UI/UX Designer
+- **Gabot, Angelo**: Full Stack Developer
 - **Dolorico, Nicole**: Documentation
 - **Gerald Villaran**: Course Instructor
 
