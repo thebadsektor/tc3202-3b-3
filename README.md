@@ -110,10 +110,10 @@ Explain the structure of the project directory. Example:
 ```
 
 ## Contributors
-- **Antopina, Junie A**: Lead Developer, Backend Developer
+- **Antopina, Junie**: Lead Developer, Backend Developer
 - **Delos Reyes, Genesis**: Backend Developer
-- **Gabot, Angelo**: Full Stack Developer
 - **Dolorico, Nicole**: Documentation
+- **Gabot, Angelo**: Full Stack Developer
 - **Gerald Villaran**: Course Instructor
 
 ## Project Timeline
