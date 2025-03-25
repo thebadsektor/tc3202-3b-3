@@ -14,6 +14,7 @@ function App() {
         <SearchResultList results={results} />
       </div>  */}
       
+      
       <CardLayout />
     
     </div>
