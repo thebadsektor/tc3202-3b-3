@@ -110,9 +110,6 @@ Explain the structure of the project directory. Example:
 ```
 
 ## Contributors
-
-List all the team members involved in the project. Include their roles and responsibilities:
-
 - **Antopina, Junie A**: Lead Developer, Backend Developer
 - **Delos Reyes, Genesis**: Backend Developer
 - **Gabot, Angelo**: Full Stack Developer
