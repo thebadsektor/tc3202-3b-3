@@ -1,155 +1,81 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> 3d57d34 (fix cardlayout)
-.card-container
-{
+.card-container {
   display: flex;
   justify-content: center;
-<<<<<<< HEAD
-  align-items: center;
-  min-height: 100vh;
-  padding: 20px;
-  flex-wrap: wrap;
-=======
   align-items: center; 
   min-height: 100vh; 
   padding: 20px;
+  flex-wrap: wrap;
   gap: 10px;
->>>>>>> 3d57d34 (fix cardlayout)
 }
 
-.card
-{
+.card {
   width: fit-content;
-<<<<<<< HEAD
-  max-width: 500px;
-  min-width: 250px;
-  height: auto;
-  max-height: 200px; 
-  overflow-y: auto; 
-  border: 1px solid #ffffff;
-  border-radius: 8px;
-=======
   max-width: 700px;
   min-width: 250px;
   height: auto;
   border: 1px solid white;
   border-radius: 20px;
->>>>>>> 3d57d34 (fix cardlayout)
   margin: 2vw;
   padding: 2vw;
   text-align: center;
   cursor: pointer;
-<<<<<<< HEAD
   transition: transform 0.5s ease, box-shadow 0.3s ease, color 0.5s ease;
-=======
-  transition: transform 0.2s ease;
->>>>>>> 3d57d34 (fix cardlayout)
   background-color: #303030;
   color: white;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-<<<<<<< HEAD
   justify-content: flex-start; 
   overflow: hidden; 
-  flex-shrink: 0;  
-=======
-  justify-content: center;
-  overflow: visible;
->>>>>>> 3d57d34 (fix cardlayout)
+  flex-shrink: 0;
 }
 
-.card:hover
-{
-<<<<<<< HEAD
+.card:hover {
   transform: scale(1.2);
   box-shadow: 10px 4px 20px rgba(255, 0, 0, 0);
   background-color: white;
+  border: 1px solid black;
 }
 
-=======
-  transform: scale(1.17);
-  border: 1px solid Black;
-  background-color: white;
-}
-
-.card-container:has(.card:hover) .card:not(:hover)
-{
+.card-container:has(.card:hover) .card:not(:hover) {
   filter: blur(1.2px);
   box-shadow: 0px 0px 20px white;
 }
 
->>>>>>> 3d57d34 (fix cardlayout)
-.card:hover h2, .card:hover p
-{
+.card:hover h2, .card:hover p {
   color: black;
 }
 
-.card h2
-{
+.card h2 {
   margin-top: 0;
   color: white;
   word-wrap: break-word;
 }
 
-<<<<<<< HEAD
-.card p
-{
+.card p {
   font-size: 1.2rem; 
   line-height: 1.6;   
 }
 
-.card-first
-=======
-.card-first, .card-second
->>>>>>> 3d57d34 (fix cardlayout)
-{
+.card-first, .card-second {
   background-color: #303030;
 }
 
-<<<<<<< HEAD
-.card-second
-{
-  background-color: #303030;
-}
-
-/* Media query for devices larger than 768px (e.g., desktop) */
-@media (min-width: 769px)
-{
+@media (min-width: 769px) {
   .card {
     max-height: 400px; 
   }
 }
 
-@media (max-width: 768px)
-{
-  .card-container
-  {
-    flex-direction: column;  
-    align-items: center;     
+@media (max-width: 768px) {
+  .card-container {
+    flex-direction: column;
+    align-items: center;
   }
 
-  .card
-  {
-    width: 80vw;             
-    margin: 4vw 0;           
+  .card {
+    width: 80vw;
+    margin: 4vw 0;
     max-height: 200px;
   }
 }
-=======
-@media (max-width: 768px)
-{
-  .statement-cards-container
-  {
-      flex-direction: column;
-  }
-
-  .statement-card
-  {
-      width: 80vw;
-      margin: 4vw 0;
-  }
-}
->>>>>>> 3d57d34 (fix cardlayout)
