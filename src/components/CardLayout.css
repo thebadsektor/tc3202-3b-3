@@ -1,16 +1,28 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3d57d34 (fix cardlayout)
 .card-container
 {
   display: flex;
   justify-content: center;
+<<<<<<< HEAD
   align-items: center;
   min-height: 100vh;
   padding: 20px;
   flex-wrap: wrap;
+=======
+  align-items: center; 
+  min-height: 100vh; 
+  padding: 20px;
+  gap: 10px;
+>>>>>>> 3d57d34 (fix cardlayout)
 }
 
 .card
 {
   width: fit-content;
+<<<<<<< HEAD
   max-width: 500px;
   min-width: 250px;
   height: auto;
@@ -18,28 +30,58 @@
   overflow-y: auto; 
   border: 1px solid #ffffff;
   border-radius: 8px;
+=======
+  max-width: 700px;
+  min-width: 250px;
+  height: auto;
+  border: 1px solid white;
+  border-radius: 20px;
+>>>>>>> 3d57d34 (fix cardlayout)
   margin: 2vw;
   padding: 2vw;
   text-align: center;
   cursor: pointer;
+<<<<<<< HEAD
   transition: transform 0.5s ease, box-shadow 0.3s ease, color 0.5s ease;
+=======
+  transition: transform 0.2s ease;
+>>>>>>> 3d57d34 (fix cardlayout)
   background-color: #303030;
   color: white;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+<<<<<<< HEAD
   justify-content: flex-start; 
   overflow: hidden; 
   flex-shrink: 0;  
+=======
+  justify-content: center;
+  overflow: visible;
+>>>>>>> 3d57d34 (fix cardlayout)
 }
 
 .card:hover
 {
+<<<<<<< HEAD
   transform: scale(1.2);
   box-shadow: 10px 4px 20px rgba(255, 0, 0, 0);
   background-color: white;
 }
 
+=======
+  transform: scale(1.17);
+  border: 1px solid Black;
+  background-color: white;
+}
+
+.card-container:has(.card:hover) .card:not(:hover)
+{
+  filter: blur(1.2px);
+  box-shadow: 0px 0px 20px white;
+}
+
+>>>>>>> 3d57d34 (fix cardlayout)
 .card:hover h2, .card:hover p
 {
   color: black;
@@ -52,6 +94,7 @@
   word-wrap: break-word;
 }
 
+<<<<<<< HEAD
 .card p
 {
   font-size: 1.2rem; 
@@ -59,10 +102,14 @@
 }
 
 .card-first
+=======
+.card-first, .card-second
+>>>>>>> 3d57d34 (fix cardlayout)
 {
   background-color: #303030;
 }
 
+<<<<<<< HEAD
 .card-second
 {
   background-color: #303030;
@@ -91,3 +138,18 @@
     max-height: 200px;
   }
 }
+=======
+@media (max-width: 768px)
+{
+  .statement-cards-container
+  {
+      flex-direction: column;
+  }
+
+  .statement-card
+  {
+      width: 80vw;
+      margin: 4vw 0;
+  }
+}
+>>>>>>> 3d57d34 (fix cardlayout)
