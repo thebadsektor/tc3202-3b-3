@@ -1,4 +1,5 @@
-.search-container {
+.search-container
+{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -10,7 +11,8 @@
     margin-right: 10px; /* Added horizontal margin */
 }
 
-.search-form {
+.search-form
+{
     width: 90%;
     max-width: 600px;
     display: flex;
@@ -24,7 +26,8 @@
     box-sizing: border-box;
 }
 
-.search-input {
+.search-input
+{
     width: 100%;
     padding: 5px;
     font-size: 16px;
@@ -35,13 +38,16 @@
     box-sizing: border-box;
 }
 
-.search-input::placeholder {
+.search-input::placeholder
+{
     color: #aaa;
     font-style: italic;
 }
 
-@media (max-width: 600px) {
-    .search-form {
+@media (max-width: 600px)
+{
+    .search-form
+    {
         width: 100%;
     }
 }

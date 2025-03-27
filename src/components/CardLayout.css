@@ -1,4 +1,5 @@
-.card-container {
+.card-container
+{
   display: flex;
   justify-content: center;
   align-items: center; 
@@ -8,7 +9,8 @@
   gap: 10px;
 }
 
-.card {
+.card
+{
   width: fit-content;
   max-width: 700px;
   min-width: 250px;
@@ -19,7 +21,7 @@
   padding: 2vw;
   text-align: center;
   cursor: pointer;
-  transition: transform 0.5s ease, box-shadow 0.3s ease, color 0.5s ease;
+  transition: transform 0.15s ease;
   background-color: #303030;
   color: white;
   box-sizing: border-box;
@@ -30,50 +32,59 @@
   flex-shrink: 0;
 }
 
-.card:hover {
-  transform: scale(1.2);
-  box-shadow: 10px 4px 20px rgba(255, 0, 0, 0);
+.card:hover
+{
+  transform: scale(1.15);
   background-color: white;
-  border: 1px solid black;
 }
 
-.card-container:has(.card:hover) .card:not(:hover) {
+.card-container:has(.card:hover) .card:not(:hover)
+{
   filter: blur(1.2px);
   box-shadow: 0px 0px 20px white;
 }
 
-.card:hover h2, .card:hover p {
+.card:hover h2, .card:hover p
+{
   color: black;
 }
 
-.card h2 {
+.card h2
+{
   margin-top: 0;
   color: white;
   word-wrap: break-word;
 }
 
-.card p {
+.card p
+{
   font-size: 1.2rem; 
   line-height: 1.6;   
 }
 
-.card-first, .card-second {
+.card-first, .card-second
+{
   background-color: #303030;
 }
 
-@media (min-width: 769px) {
-  .card {
+@media (min-width: 769px)
+{
+  .card
+  {
     max-height: 400px; 
   }
 }
 
-@media (max-width: 768px) {
-  .card-container {
+@media (max-width: 768px)
+{
+  .card-container
+  {
     flex-direction: column;
     align-items: center;
   }
 
-  .card {
+  .card
+  {
     width: 80vw;
     margin: 4vw 0;
     max-height: 200px;
