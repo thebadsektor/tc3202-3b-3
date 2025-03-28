@@ -1,22 +1,89 @@
-.App {
+/* Base Styles */
+.App, .intro-container {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100vh;
-  background-image: url("../src/assets/Background.png");
+  font-family: 'Arial', sans-serif;
+}
+
+.App {
+  background: #212121 url("../src/assets/Background.png") bottom center/contain no-repeat;
+}
+
+.App:not(.intro-container) {
+  background-image: url('./assets/introbg.png'); /* Your existing background */
   background-size: cover;
   background-position: bottom center;
-  background-repeat: no-repeat;
   background-color: #212121;
 }
 
+/* Intro Card */
+.intro-content {
+  width: 90%;
+  max-width: 600px;
+  padding: 30px 40px;
+  background: rgba(33, 33, 33, 0.9);
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
+  color: white;
+  animation: fadeIn 0.8s ease-out;
+}
+
+.intro-title {
+  font-size: clamp(2rem, 5vw, 2.5rem);
+  margin-bottom: 20px;
+}
+
+.intro-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  opacity: 0.8;
+}
+
+/* Button */
+.continue-button {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.continue-button:hover {
+  background: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+/* Search Bar */
 .search-bar-container {
+  width: 90%;
+  max-width: 40%;
   padding-top: 20vh;
-  width: 40%;
   margin: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 200px;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .search-bar-container {
+    max-width: 90%;
+    padding-top: 10vh;
+  }
 }
