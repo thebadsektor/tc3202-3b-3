@@ -10,8 +10,9 @@ function Card({ title, content, className, onClick }) {
   );
 }
 
-function CardLayout() {
-  // Array with the content statements
+function CardLayout()
+{
+
   const contentArray = [
     "Integrity is the foundation of trust and the key to building lasting relationships.",
     "Taking responsibility means owning your actions and their consequences, whether positive or negative.",
@@ -25,16 +26,16 @@ function CardLayout() {
     "Gratitude is recognizing the good in your life and being thankful for the people and experiences that enrich it."
   ];
 
-  // State to hold the current content for both cards
+
   const [card1Content, setCard1Content] = useState(contentArray[0]);
   const [card2Content, setCard2Content] = useState(contentArray[1]);
 
-  // Function to handle random content change
+
   const changeContent = () => {
     let randomIndex1 = Math.floor(Math.random() * contentArray.length);
     let randomIndex2 = Math.floor(Math.random() * contentArray.length);
 
-    // Ensure that the two indices are different
+
     while (randomIndex1 === randomIndex2) {
       randomIndex2 = Math.floor(Math.random() * contentArray.length);
     }

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './App.css';
-import introBackground from './assets/introbg.png'; // Make sure this file exists
-import mainBackground from './assets/Background.png';   // Make sure this file exists
+import introBackground from './assets/introbg.png';
+import mainBackground from './assets/Background.png';
 import CardLayout from './components/card';
 
 function App() {

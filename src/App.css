@@ -1,5 +1,5 @@
-/* Base Styles */
-.App, .intro-container {
+.App, .intro-container
+{
   display: flex;
   justify-content: center;
   align-items: center;
@@ -8,19 +8,22 @@
   font-family: 'Arial', sans-serif;
 }
 
-.App {
+.App
+{
   background: #212121 url("../src/assets/Background.png") bottom center/contain no-repeat;
 }
 
-.App:not(.intro-container) {
-  background-image: url('./assets/introbg.png'); /* Your existing background */
+.App:not(.intro-container)
+{
+  background-image: url('./assets/introbg.png');
   background-size: cover;
   background-position: bottom center;
   background-color: #212121;
 }
 
-/* Intro Card */
-.intro-content {
+
+.intro-content
+{
   width: 90%;
   max-width: 600px;
   padding: 30px 40px;
@@ -33,20 +36,23 @@
   animation: fadeIn 0.8s ease-out;
 }
 
-.intro-title {
+.intro-title
+{
   font-size: clamp(2rem, 5vw, 2.5rem);
   margin-bottom: 20px;
 }
 
-.intro-text {
+.intro-text
+{
   font-size: 1rem;
   line-height: 1.6;
   margin-bottom: 30px;
   opacity: 0.8;
 }
 
-/* Button */
-.continue-button {
+
+.continue-button
+{
   background: #3498db;
   color: white;
   border: none;
@@ -57,14 +63,15 @@
   box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
 }
 
-.continue-button:hover {
+.continue-button:hover
+{
   background: #2980b9;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
 }
 
-/* Search Bar */
-.search-bar-container {
+.search-bar-container
+{
   width: 90%;
   max-width: 40%;
   padding-top: 20vh;
@@ -74,15 +81,25 @@
   align-items: center;
 }
 
-/* Animation */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+
+@keyframes fadeIn
+{
+  from
+  {
+    opacity: 0; transform: translateY(20px);
+  }
+  
+  to
+  {
+    opacity: 1; transform: translateY(0);
+  }
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .search-bar-container {
+
+@media (max-width: 768px)
+{
+  .search-bar-container
+  {
     max-width: 90%;
     padding-top: 10vh;
   }
