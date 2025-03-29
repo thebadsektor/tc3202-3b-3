@@ -44,14 +44,14 @@ Mention the tools, frameworks, and technologies used in the project:
 - Programming Languages: [e.g., Python, JavaScript, etc.]
 - Frameworks/Libraries: [e.g., React, Flask, etc.]
 - Databases: [e.g., MySQL, MongoDB, etc.]
-- Other Tools: [e.g., Git, Docker, etc.]
+- Other Tools: Git
 
 ## Setup and Installation
 Step-by-step instructions for setting up the project locally.
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-repo-url.git
+   git clone https://github.com/thebadsektor/tc3202-3b-3.git
    ```
 2. **Install dependencies:**
 	- If using `npm`:
@@ -69,9 +69,9 @@ Step-by-step instructions for setting up the project locally.
 4. **Run the project:**
    - For web projects:
    ```bash
-   npm start
+   npm run dev
    ```
-   - IFor backend services:
+   - For backend services:
    ```bash
    python app.py
    ```
@@ -117,9 +117,6 @@ Explain the structure of the project directory. Example:
 - **Gerald Villaran**: Course Instructor
 
 ## Project Timeline
-
-Outline the project timeline, including milestones or deliverables. Example:
-
 - **Week 1-2**: Research and project planning.
 - **Week 3-5**: Design and setup.
 - **Week 6-10**: Implementation.
