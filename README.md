@@ -19,7 +19,8 @@
 ---
 
 ## Introduction
-Provide a brief introduction to the project. Explain the purpose, scope, and the problem it solves in a few sentences.
+This system help the user to gain views and position of various politician based on their insight preference and values. Upon generating the users politicians stance, the system provides personalized recommendations that match users political personality. This system aim to help the voters make more informed decisions by presenting politicians whose align with their own, enhancing political decision-making. 
+
 
 ## Project Overview
 Describe the project in detail. Include:
