@@ -1,7 +1,7 @@
-// src/Footer.js
+
 
 import React from 'react';
-import './App.css'; // or extract footer styles to a new Footer.css
+import './Footer.css'; 
 
 function Footer() {
   return (
