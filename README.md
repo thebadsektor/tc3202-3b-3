@@ -70,7 +70,7 @@ Step-by-step instructions for setting up the project locally.
    ```
    - If using `pip` (for Python projects):
    ```bash
-   cd Backend/
+   cd Backend
    python -m venv .venv
    source .venv/Scripts/activate
    pip install -r requirements.txt
