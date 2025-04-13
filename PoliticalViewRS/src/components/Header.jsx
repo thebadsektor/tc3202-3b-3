@@ -1,22 +1,31 @@
-import React from 'react';
+import React from "react";
 
 function Header() {
   return (
-    <nav className="bg-[#444] p-4">
-      <ul className="flex justify-center gap-8 list-none m-0 p-0">
+    <nav className='bg-[#202021] p-4'>
+       <ul className='flex justify-center gap-8 list-none m-0 p-0'>
         <li>
-          <a href="#home" className="text-white font-bold no-underline hover:underline">
+          <a
+             href='#home'
+             className='text-white font-bold no-underline hover:underline'
+           >            
             Home
           </a>
         </li>
         <li>
-          <a href="#settings" className="text-white font-bold no-underline hover:underline">
-            Settings
+          <a
+            href='#Resources'
+            className='text-white font-bold no-underline hover:underline'
+          >
+             Resources
           </a>
         </li>
         <li>
-          <a href="#help" className="text-white font-bold no-underline hover:underline">
-            Help
+          <a
+             href='#About us'
+             className='text-white font-bold no-underline hover:underline'
+           >
+             About us
           </a>
         </li>
       </ul>

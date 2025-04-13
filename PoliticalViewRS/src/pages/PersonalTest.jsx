@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Result from "./Result";
+import bgImage from "../assets/Background.png";
 
 // Card Component - Simplified and more consistent
 const Card = ({ content, className = "", onClick }) => {
@@ -16,6 +17,11 @@ const Card = ({ content, className = "", onClick }) => {
 // AgeSet Component - Improved with better accessibility
 const AgeSet = ({ onSelectAge }) => {
   const ageOptions = ["18-24", "25-34", "35-44", "45-54", "55+"];
+
+  useEffect(() => {
+    document.title = "Select Age";
+  }, []);
+
 
   return (
     <div className='flex flex-col items-center space-y-8'>
@@ -38,6 +44,10 @@ const AgeSet = ({ onSelectAge }) => {
 const GenderSet = ({ onSelectGender }) => {
   const genderOptions = ["Male", "Female", "Other"];
 
+  useEffect(() => {
+    document.title = "Select Gender";
+  }, []);
+
   return (
     <div className='flex flex-col items-center space-y-8'>
       <p className='text-2xl font-medium text-white mb-4'>Gender</p>
@@ -55,47 +65,6 @@ const GenderSet = ({ onSelectGender }) => {
   );
 };
 
-// Result Component - More polished presentation
-// const Result = ({ predictedValues, userAnswers }) => {
-// const Result = ({ predictedValues }) => {
-
-//    // Remove prefix and split by asterisk
-//    console.log(predictedValues);
-//    const valuesOnly = predictedValues
-//    .replace(/Based on your responses, your predicted values are:/i, '')
-//    .split('*')
-//    .map(val => val.trim())
-//    .filter(val => val.length > 0); // Filter out empty strings
-
-//   return (
-//     <div className='min-h-screen bg-[#212121] p-12 flex flex-col items-center justify-center text-white'>
-//       <div className='bg-gray-800 bg-opacity-50 p-6 rounded-xl mb-8'>
-//         <p className='text-xl text-white'>
-//           Based on your responses, your predicted values are:
-//         </p>
-//         <br />
-//         <ul className='list-disc list-inside space-y-2'>
-//           {valuesOnly.map((value, index) => (
-//             <li key={index} className='text-white text-lg'>
-//               {value}
-//             </li>
-//           ))}
-//         </ul>
-
-//       </div>
-
-//       {/* <ul className='space-y-0'>
-//         {userAnswers.map((answer, index) => (
-//           <li key={index} className='bg-gray-800 bg-opacity-30 p-4 rounded-lg'>
-//             <p className='text-white'>{answer}</p>
-//           </li>
-//         ))}
-//       </ul> */}
-//     </div>
-//   );
-// };
-
-
 // Main PersonalTest Component - Better organized and more robust
 const PersonalTest = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -108,12 +77,21 @@ const PersonalTest = () => {
   const [showResult, setShowResult] = useState(false);
   const [predictedValues, setPredictedValues] = useState("");
   const [matchedCandidates, setMatchedCandidates] = useState([]);
+  // const [initialLoading, setInitialLoading] = useState(true);
 
 
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setInitialLoading(false);
+  //   }, 1000); 
   
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   useEffect(() => {
     const fetchStatements = async () => {
+      document.title = "Personality Test";
+
       try {
         const response = await fetch(`http://127.0.0.1:5000/get-statements`);
         if (!response.ok) throw new Error("Network response was not ok");
@@ -198,15 +176,27 @@ const PersonalTest = () => {
   const currentQuestion = questions[currentQuestionIndex] || {};
   const { question, options } = currentQuestion;
 
+  // if (initialLoading) {
+  //   return (
+  //     <div className="min-h-screen bg-[#121212] flex items-center justify-center text-white">
+  //       <div className="text-2xl animate-pulse">Preparing your test...</div>
+  //     </div>
+  //   );
+  // }
+
   if (loading) {
     return (
-      <div className='min-h-screen flex items-center justify-center'>
-        <div className='text-3xl font-medium text-white'>
+      <div
+        style={{ backgroundImage: `url(${bgImage})` }}
+        className='fixed top-0 left-0 w-full h-full bg-cover bg-center flex items-center justify-center text-white text-center z-50'
+      >
+        <div className='text-3xl font-medium text-white animate-pulse'>
           Loading content...
         </div>
       </div>
     );
   }
+  
 
   if (error) {
     return (
@@ -226,9 +216,11 @@ const PersonalTest = () => {
     );
   }
 
-
   return (
-    <div className='min-h-screen bg-base-200 p-12 flex flex-col items-center justify-center text-white text-center'>
+    <div
+       style={{ backgroundImage: `url(${bgImage})` }}
+       className='min-h-screen bg-cover bg-center p-12 flex flex-col items-center justify-center text-white text-center'
+     >
       {!showNextSet && currentSet === "" && question && (
         <div className='w-full max-w-2xl mb-12'>
           <h2 className='text-3xl md:text-3xl font-medium text-white mb-12'>

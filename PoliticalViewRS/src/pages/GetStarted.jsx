@@ -1,36 +1,52 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import bgImage from "../assets/introbg.png";
 
 function GetStarted() {
-  const navigate = useNavigate(); // Hook from react-router
+  const navigate = useNavigate();
 
   const handleGetStarted = () => {
-     navigate('/personal-test'); // Navigates to PersonalTest
+    navigate("/personal-test");
   };
 
+  useEffect(() => {
+    document.title = "Home";
+  }, []);
+
   return (
-    <div className="flex flex-col h-full w-full bg-[#f5f7fa] text-gray-900">
+    <div className='flex flex-col min-h-screen'>
+  <div
+    style={{
+      backgroundImage: `url(${bgImage})`,
+      backgroundRepeat: "no-repeat",
+      backgroundPosition: "bottom",
+      backgroundSize: "contain",
+    }}
+    className='relative flex-1 w-full bg-[#202021] text-white flex flex-col'
+  >
+    <Header />
 
-      <Header />
-
-      <header className="bg-[#2e3138] text-white p-5 text-center">
-        <h1 className="text-3xl font-semibold">Welcome to Political View RS</h1>
-      </header>
-
-      <main className="flex-1 flex justify-center items-center">
-        <button
-          className="px-6 py-4 text-[1.2rem] rounded-[10px] bg-black text-white font-bold cursor-pointer transition duration-300 ease-in-out hover:bg-[#3f3f3f] hover:scale-105"
-          onClick={handleGetStarted}
-        >
-          Get Started
-        </button>
-      </main>
-
-      <Footer />
-
+    <div className='absolute top-32 left-0 right-0 text-center px-4'>
+      <h1 className='text-3xl md:text-4xl font-semibold'>
+        Welcome to Political View Recommendation System
+      </h1>
     </div>
+
+    <div className='flex-1 flex items-center justify-center'>
+      <button
+        onClick={handleGetStarted}
+        className='text-white !bg-[#303030] hover:!bg-white transform transition-transform duration-200 hover:scale-110 hover:text-black py-5 px-10 text-xl rounded-lg border border-white font-bold'
+      >
+        Get Started
+      </button>
+    </div>
+  </div>
+
+  <Footer />
+</div>
+
   );
 }
 
