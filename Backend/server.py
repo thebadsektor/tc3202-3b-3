@@ -74,7 +74,7 @@ if __name__ == '__main__':
 #         # Step 3: Match candidates based on predicted values
 #         matched = match_candidates(predicted_values)
 
-#         # 🔍 Print predicted values and matches to console for debugging
+#         # Print predicted values and matches to console for debugging
 #         print("Predicted Values:")
 #         for val in predicted_values:
 #             print(f"  * {val}")

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import bgImage from "../assets/Background.png";
 
 // Card Component - Simplified and more consistent
 const Card = ({ content, className = "", onClick }) => {
@@ -94,24 +95,23 @@ const GenderSet = ({ onSelectGender }) => {
 //   );
 // };
 
-
 const Result = ({ predictedValues, matchedCandidates }) => {
   const valuesOnly = Array.isArray(predictedValues)
     ? predictedValues
     : predictedValues
-        .split('*')
+        .split("*")
         .map((val) => val.trim())
         .filter((val) => val.length > 0);
 
-  console.log("Candidates: ",matchedCandidates);
+  console.log("Candidates: ", matchedCandidates);
   console.log(predictedValues);
 
   return (
     <div className='min-h-screen bg-[#212121] p-12 flex flex-col items-center justify-center text-white'>
       {/* Predicted Values Section */}
-      <div className='bg-gray-800 bg-opacity-50 p-6 rounded-xl mb-8 w-full max-w-2xl'>
+      <div className='bg-[#303030] bg-opacity-50 p-6 rounded-xl mb-8 w-full max-w-2xl'>
         <p className='text-xl text-white mb-4'>
-          Based on your responses, your predicted values are:
+          Based on your responses, your predicted values are...
         </p>
         <ul className='list-disc list-inside space-y-2'>
           {valuesOnly.map((value, index) => (
@@ -149,7 +149,6 @@ const Result = ({ predictedValues, matchedCandidates }) => {
   );
 };
 
-
 // Main PersonalTest Component - Better organized and more robust
 const PersonalTest = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -162,8 +161,6 @@ const PersonalTest = () => {
   const [showResult, setShowResult] = useState(false);
   const [predictedValues, setPredictedValues] = useState("");
   const [matchedCandidates, setMatchedCandidates] = useState([]);
-
-  
 
   useEffect(() => {
     const fetchStatements = async () => {
@@ -218,24 +215,23 @@ const PersonalTest = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ answers }),
       });
-  
+
       if (!response.ok) throw new Error("Failed to fetch prediction");
       const result = await response.json();
-  
+
       setPredictedValues(result.predicted_values);
-      setMatchedCandidates(result.matches); // <-- add this line
+      setMatchedCandidates(result.matches);
     } catch (error) {
       setError("Error fetching prediction: " + error.message);
     }
   };
-  
 
   const handleAnswer = (answer) => {
     const newAnswers = [...userAnswers, answer];
     setUserAnswers(newAnswers);
 
     if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);  
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
       setShowNextSet(true);
       fetchPrediction(newAnswers);
@@ -279,7 +275,10 @@ const PersonalTest = () => {
   }
 
   return (
-    <div className='min-h-screen bg-base-200 p-12 flex flex-col items-center justify-center text-white text-center'>
+    <div
+      style={{ backgroundImage: `url(${bgImage})` }}
+      className='min-h-screen bg-cover bg-center p-12 flex flex-col items-center justify-center text-white text-center'
+    >
       {!showNextSet && currentSet === "" && question && (
         <div className='w-full max-w-2xl mb-12'>
           <h2 className='text-3xl md:text-3xl font-medium text-white mb-12'>
