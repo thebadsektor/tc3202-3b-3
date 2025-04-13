@@ -1,4 +1,3 @@
-// import { useState } from "react";
 import "./App.css";
 import GetStarted from "./pages/GetStarted";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';

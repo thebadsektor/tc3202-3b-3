@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Result from "./Result";
 
 // Card Component - Simplified and more consistent
 const Card = ({ content, className = "", onClick }) => {
@@ -95,61 +96,6 @@ const GenderSet = ({ onSelectGender }) => {
 // };
 
 
-const Result = ({ predictedValues, matchedCandidates }) => {
-  const valuesOnly = Array.isArray(predictedValues)
-    ? predictedValues
-    : predictedValues
-        .split('*')
-        .map((val) => val.trim())
-        .filter((val) => val.length > 0);
-
-  console.log("Candidates: ",matchedCandidates);
-  console.log(predictedValues);
-
-  return (
-    <div className='min-h-screen bg-[#212121] p-12 flex flex-col items-center justify-center text-white'>
-      {/* Predicted Values Section */}
-      <div className='bg-gray-800 bg-opacity-50 p-6 rounded-xl mb-8 w-full max-w-2xl'>
-        <p className='text-xl text-white mb-4'>
-          Based on your responses, your predicted values are:
-        </p>
-        <ul className='list-disc list-inside space-y-2'>
-          {valuesOnly.map((value, index) => (
-            <li key={index} className='text-white text-lg'>
-              {value}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Matched Candidates Section */}
-      {matchedCandidates?.length > 0 && (
-        <div className='bg-gray-800 bg-opacity-50 p-6 rounded-xl w-full max-w-2xl'>
-          <p className='text-xl text-white mb-4'>
-            Candidates that closely match your values:
-          </p>
-          <ul className='space-y-3'>
-            {matchedCandidates.map((candidate, index) => (
-              <li
-                key={index}
-                className='text-white text-lg flex justify-between border-b border-gray-600 pb-2'
-              >
-                <span>
-                  {candidate.candidate_name} ({candidate.party})
-                </span>
-                <span className='text-sm text-gray-400'>
-                  Match Score: {(1 - candidate.distance).toFixed(2)}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
-  );
-};
-
-
 // Main PersonalTest Component - Better organized and more robust
 const PersonalTest = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -162,6 +108,7 @@ const PersonalTest = () => {
   const [showResult, setShowResult] = useState(false);
   const [predictedValues, setPredictedValues] = useState("");
   const [matchedCandidates, setMatchedCandidates] = useState([]);
+
 
   
 
@@ -195,21 +142,24 @@ const PersonalTest = () => {
     }, []);
   };
 
-  // const fetchPrediction = async (answers) => {
-  //   try {
-  //     const response = await fetch("http://127.0.0.1:5000/predict-values", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ answers }),
-  //     });
+  const fetchMatchingCandidates = async (answers) => {
+    try {
+      const response = await fetch("http://127.0.0.1:5000/match-based-on-answers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ answers }),
+      });
+  
+      if (!response.ok) throw new Error("Failed to fetch matched candidates");
+  
+      const result = await response.json();
+      return result.matches || [];
+    } catch (error) {
+      console.error("Error fetching matched candidates:", error);
+      return [];
+    }
+  };
 
-  //     if (!response.ok) throw new Error("Failed to fetch prediction");
-  //     const result = await response.json();
-  //     setPredictedValues(result.predicted_values);
-  //   } catch (error) {
-  //     setError("Error fetching prediction: " + error.message);
-  //   }
-  // };
 
   const fetchPrediction = async (answers) => {
     try {
@@ -220,16 +170,19 @@ const PersonalTest = () => {
       });
   
       if (!response.ok) throw new Error("Failed to fetch prediction");
-      const result = await response.json();
   
+      const result = await response.json();
       setPredictedValues(result.predicted_values);
-      setMatchedCandidates(result.matches); // <-- add this line
+  
+      // 🔥 Use the function here
+      const matches = await fetchMatchingCandidates(answers);
+      setMatchedCandidates(matches);
     } catch (error) {
-      setError("Error fetching prediction: " + error.message);
+      setError("Error fetching prediction or matches: " + error.message);
     }
   };
-  
 
+  
   const handleAnswer = (answer) => {
     const newAnswers = [...userAnswers, answer];
     setUserAnswers(newAnswers);
@@ -263,20 +216,16 @@ const PersonalTest = () => {
     );
   }
 
-  // if (showResult) {
-  //   return (
-  //     <Result predictedValues={predictedValues} userAnswers={userAnswers} />
-  //   );
-  // }
-
   if (showResult) {
     return (
       <Result
         predictedValues={predictedValues}
-        matchedCandidates={matchedCandidates}
+        userAnswers={userAnswers}
+        matchedCandidates={matchedCandidates} // 🆕
       />
     );
   }
+
 
   return (
     <div className='min-h-screen bg-base-200 p-12 flex flex-col items-center justify-center text-white text-center'>
