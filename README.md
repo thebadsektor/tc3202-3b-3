@@ -65,12 +65,12 @@ Step-by-step instructions for setting up the project locally.
 2. **Install dependencies:**
    - If using `npm`:
    ```bash
-   cd frontend/PoliticalViewRS
+   cd PoliticalViewRS
    npm install
    ```
    - If using `pip` (for Python projects):
    ```bash
-   cd backend/
+   cd Backend/
    python -m venv .venv
    source .venv/Scripts/activate
    pip install -r requirements.txt
