@@ -17,6 +17,10 @@ const Card = ({ content, className = "", onClick }) => {
 const AgeSet = ({ onSelectAge }) => {
   const ageOptions = ["18-24", "25-34", "35-44", "45-54", "55+"];
 
+  useEffect(() => {
+    document.title = "Select Age";
+  }, []);
+
   return (
     <div className='flex flex-col items-center space-y-8'>
       <p className='text-2xl font-medium text-white mb-4'>Age Group</p>
@@ -37,6 +41,10 @@ const AgeSet = ({ onSelectAge }) => {
 // GenderSet Component - Improved with better accessibility
 const GenderSet = ({ onSelectGender }) => {
   const genderOptions = ["Male", "Female", "Other"];
+
+  useEffect(() => {
+    document.title = "Select Gender";
+  }, []);
 
   return (
     <div className='flex flex-col items-center space-y-8'>
@@ -106,6 +114,10 @@ const Result = ({ predictedValues, matchedCandidates }) => {
   console.log("Candidates: ", matchedCandidates);
   console.log(predictedValues);
 
+  useEffect(() => {
+    document.title = "Result";
+  }, []);
+
   return (
     <div className='min-h-screen bg-[#212121] p-12 flex flex-col items-center justify-center text-white'>
       {/* Predicted Values Section */}
@@ -164,6 +176,7 @@ const PersonalTest = () => {
 
   useEffect(() => {
     const fetchStatements = async () => {
+      document.title = "Personality Test";
       try {
         const response = await fetch(`http://127.0.0.1:5000/get-statements`);
         if (!response.ok) throw new Error("Network response was not ok");
@@ -175,7 +188,6 @@ const PersonalTest = () => {
         setLoading(false);
       }
     };
-
     fetchStatements();
   }, []);
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -10,6 +10,10 @@ function GetStarted() {
   const handleGetStarted = () => {
     navigate("/personal-test");
   };
+
+  useEffect(() => {
+    document.title = "Introduction";
+  }, []);
 
   return (
     <div className='flex flex-col min-h-screen'>
@@ -39,4 +43,5 @@ function GetStarted() {
     </div>
   );
 }
+
 export default GetStarted;

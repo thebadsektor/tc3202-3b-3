@@ -65,11 +65,15 @@ Step-by-step instructions for setting up the project locally.
 2. **Install dependencies:**
    - If using `npm`:
    ```bash
-   git clone https://github.com/thebadsektor/tc3202-3b-3.git
+   cd frontend/PoliticalViewRS
+   npm install
    ```
    - If using `pip` (for Python projects):
    ```bash
-   git clone https://github.com/your-repo-url.git
+   cd backend/
+   python -m venv .venv
+   source .venv/Scripts/activate
+   pip install -r requirements.txt
    ```
 3. **Configure environment variables (if any)**: Provide instructions for setting up .env files or any other required configurations.
    ```bash
@@ -126,8 +130,8 @@ Explain the structure of the project directory. Example:
 
 - **Antopina, Junie**: Lead Developer, Backend Developer
 - **Delos Reyes, Genesis**: Backend Developer
-- **Gabot, Angelo**: Full Stack Developer
 - **Dolorico, Nicole**: Documentation
+- **Gabot, Angelo**: Full Stack Developer
 
 ## Project Timeline
 
