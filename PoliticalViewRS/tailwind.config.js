@@ -8,6 +8,7 @@ export default {
   ],
   theme: {
     extend: {
+      scrollBehavior: ['responsive'],
       colors: {
         primary: "#4A90E2",
         secondary: "#50E3C2",
