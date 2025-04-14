@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState  } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import bgImage from "../assets/introbg.png";
@@ -6,14 +6,19 @@ import DeveloperCard from "../components/DeveloperCard";
 import Header from "../components/Header";
 import junieImg from "../assets/Developers/junie.JPG";
 import genesisImg from "../assets/Developers/genesis.jpg";
+import nicksImg from "../assets/Developers/nicks.jpg";
+import gabsImg from "../assets/Developers/gabs.jpg";
 
 
 
 function GetStarted() {
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
+
   const handleGetStarted = () => {
-    navigate("/personal-test");
+    setShowModal(true); // Show the modal
   };
+
 
   useEffect(() => {
     document.title = "Home";
@@ -36,11 +41,16 @@ function GetStarted() {
           backgroundSize: "contain",
         }}
       >
-        <div className='absolute top-32 left-0 right-0 text-center px-4'>
-          <h1 className='text-3xl md:text-4xl font-semibold'>
-            Welcome to Political View Recommendation System
+        <div className='absolute top-24 left-0 right-0 text-center px-4 flex flex-col items-center'>
+          <h1 className='text-3xl md:text-4xl font-semibold max-w-3xl mb-8'>
+            Vote with clarity. Choose with confidence.
           </h1>
+          <p className='max-w-2xl text-sm md:text-base text-gray-300'>
+            Our system helps users explore their political values and compare them with the positions of various politicians.
+            By analyzing personal insights, it delivers tailored candidate recommendations—empowering voters to make informed, value-driven decisions.
+          </p>
         </div>
+
 
         <div className='flex-1 flex items-center justify-center'>
           <button
@@ -58,9 +68,9 @@ function GetStarted() {
   <div className=' flex flex-col items-center justify-center min-h-screen px-6 text-center'>
     <h1 className='text-4xl font-bold mb-6'>About Us</h1>
     <p className='max-w-3xl text-lg'>
-      We are a team passionate about helping people understand their political
-      alignment by analyzing values through a unique questionnaire. Our system
-      uses AI to recommend political candidates that resonate with your values.
+      We’re a team that’s passionate about helping people figure out where they stand 
+      politically by exploring their core values. With a unique questionnaire and smart AI, 
+      we connect users with political candidates who genuinely reflect what they care about.
     </p>
 
     {/* ↓ Developers Button */}
@@ -93,7 +103,7 @@ function GetStarted() {
     <div className='flex justify-center min-h-[60vh] items-center'>
       <div className='flex flex-col md:flex-row items-center justify-center gap-40'>
         <DeveloperCard
-          image='https://via.placeholder.com/150'
+          image={gabsImg}
           name='Angelo Gabot'
           role='Full Stack Developer'
         />
@@ -108,7 +118,7 @@ function GetStarted() {
     {/* Scroll to reveal: Documentation */}
     <div className='flex justify-center min-h-[60vh] items-center'>
       <DeveloperCard
-        image='https://via.placeholder.com/150'
+        image={nicksImg}
         name='Nicole Dolorico'
         role='Documentation'
       />
@@ -116,7 +126,28 @@ function GetStarted() {
 
     </section>
 
-
+    {showModal && (
+        <div className='fixed inset-0 z-50 bg-black bg-opacity-70 flex items-center justify-center'>
+          <div className='bg-white text-black rounded-xl shadow-lg p-8 max-w-md w-full relative flex flex-col items-center text-center'>
+           <button
+            onClick={() => setShowModal(false)}
+            className='absolute top-2 right-4 text-black text-2xl font-bold'
+            >
+              &times;
+            </button>
+            <h2 className='text-2xl font-bold mb-4'>Before You Begin</h2>
+            <p className='mb-6'>
+              Political View Recommendation System analyzes your values through a short question and answer to determine your political alignment. It only takes a few minutes and helps match you with candidates that share your views.
+            </p>
+            <button
+              onClick={() => navigate("/personal-test")}
+              className='bg-[#202021] hover:bg-black text-white py-3 px-6 rounded-md font-semibold w-full'
+            >
+              Start the test
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Footer */}
       <Footer />

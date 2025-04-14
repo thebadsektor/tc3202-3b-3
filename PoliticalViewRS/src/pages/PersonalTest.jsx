@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Result from "./Result";
 import bgImage from "../assets/Background.png";
 
-// Card Component - Simplified and more consistent
+// Card Component
 const Card = ({ content, className = "", onClick }) => {
   return (
     <div
@@ -14,14 +14,13 @@ const Card = ({ content, className = "", onClick }) => {
   );
 };
 
-// AgeSet Component - Improved with better accessibility
+// AgeSet Component
 const AgeSet = ({ onSelectAge }) => {
   const ageOptions = ["18-24", "25-34", "35-44", "45-54", "55+"];
 
   useEffect(() => {
     document.title = "Select Age";
   }, []);
-
 
   return (
     <div className='flex flex-col items-center space-y-8'>
@@ -40,7 +39,7 @@ const AgeSet = ({ onSelectAge }) => {
   );
 };
 
-// GenderSet Component - Improved with better accessibility
+// GenderSet Component
 const GenderSet = ({ onSelectGender }) => {
   const genderOptions = ["Male", "Female", "Other"];
 
@@ -65,7 +64,7 @@ const GenderSet = ({ onSelectGender }) => {
   );
 };
 
-// Main PersonalTest Component - Better organized and more robust
+// Main Component
 const PersonalTest = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [questions, setQuestions] = useState([]);
@@ -77,23 +76,17 @@ const PersonalTest = () => {
   const [showResult, setShowResult] = useState(false);
   const [predictedValues, setPredictedValues] = useState("");
   const [matchedCandidates, setMatchedCandidates] = useState([]);
-  // const [initialLoading, setInitialLoading] = useState(true);
-
-
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setInitialLoading(false);
-  //   }, 1000); 
-  
-  //   return () => clearTimeout(timer);
-  // }, []);
+  const [politicianStatements, setPoliticianStatements] = useState([]);
+  const [currentRound, setCurrentRound] = useState(0);
+  const [politicianAnswers, setPoliticianAnswers] = useState([]);
+  const [loadingPoliticianStatements, setLoadingPoliticianStatements] = useState(false);
 
   useEffect(() => {
     const fetchStatements = async () => {
       document.title = "Personality Test";
 
       try {
-        const response = await fetch(`http://127.0.0.1:5000/get-statements`);
+        const response = await fetch("http://127.0.0.1:5000/get-statements");
         if (!response.ok) throw new Error("Network response was not ok");
         const data = await response.json();
         setQuestions(parseQuestionsAndOptions(data));
@@ -127,9 +120,9 @@ const PersonalTest = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ answers }),
       });
-  
+
       if (!response.ok) throw new Error("Failed to fetch matched candidates");
-  
+
       const result = await response.json();
       return result.matches || [];
     } catch (error) {
@@ -138,7 +131,6 @@ const PersonalTest = () => {
     }
   };
 
-
   const fetchPrediction = async (answers) => {
     try {
       const response = await fetch("http://127.0.0.1:5000/predict-values", {
@@ -146,13 +138,12 @@ const PersonalTest = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ answers }),
       });
-  
+
       if (!response.ok) throw new Error("Failed to fetch prediction");
-  
+
       const result = await response.json();
       setPredictedValues(result.predicted_values);
-  
-      // 🔥 Use the function here
+
       const matches = await fetchMatchingCandidates(answers);
       setMatchedCandidates(matches);
     } catch (error) {
@@ -160,13 +151,37 @@ const PersonalTest = () => {
     }
   };
 
-  
+  const fetchPoliticianStatements = async () => {
+    try {
+      setLoadingPoliticianStatements(true);
+      const response = await fetch("http://127.0.0.1:5000/get-politician-statements");
+      if (!response.ok) throw new Error("Network response was not ok");
+      const data = await response.json();
+      setPoliticianStatements(data);
+    } catch (error) {
+      setError("Error fetching political statements: " + error.message);
+    } finally {
+      setLoadingPoliticianStatements(false);
+    }
+  };
+
+  const handlePoliticianAnswer = (selectedIndex) => {
+    const selectedStatement = politicianStatements[selectedIndex];
+    setPoliticianAnswers([...politicianAnswers, selectedStatement]);
+
+    if (currentRound + 2 < politicianStatements.length) {
+      setCurrentRound(currentRound + 2);
+    } else {
+      setCurrentSet("age"); // Change to age after politicians
+    }
+  };
+
   const handleAnswer = (answer) => {
     const newAnswers = [...userAnswers, answer];
     setUserAnswers(newAnswers);
 
     if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);  
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
       setShowNextSet(true);
       fetchPrediction(newAnswers);
@@ -175,14 +190,6 @@ const PersonalTest = () => {
 
   const currentQuestion = questions[currentQuestionIndex] || {};
   const { question, options } = currentQuestion;
-
-  // if (initialLoading) {
-  //   return (
-  //     <div className="min-h-screen bg-[#121212] flex items-center justify-center text-white">
-  //       <div className="text-2xl animate-pulse">Preparing your test...</div>
-  //     </div>
-  //   );
-  // }
 
   if (loading) {
     return (
@@ -196,7 +203,6 @@ const PersonalTest = () => {
       </div>
     );
   }
-  
 
   if (error) {
     return (
@@ -211,27 +217,28 @@ const PersonalTest = () => {
       <Result
         predictedValues={predictedValues}
         userAnswers={userAnswers}
-        matchedCandidates={matchedCandidates} // 🆕
+        matchedCandidates={matchedCandidates}
       />
     );
   }
 
   return (
     <div
-       style={{ backgroundImage: `url(${bgImage})` }}
-       className='min-h-screen bg-cover bg-center p-12 flex flex-col items-center justify-center text-white text-center'
-     >
+      style={{ backgroundImage: `url(${bgImage})` }}
+      className="min-h-screen bg-cover bg-center p-12 flex flex-col items-center justify-center text-white text-center"
+    >
+      {/* Q&A */}
       {!showNextSet && currentSet === "" && question && (
-        <div className='w-full max-w-2xl mb-12'>
-          <h2 className='text-3xl md:text-3xl font-medium text-white mb-12'>
+        <div className="w-full max-w-2xl mb-12">
+          <h2 className="text-3xl md:text-3xl font-medium text-white mb-12">
             {question.replace("Q:", "").trim()}
           </h2>
-          <div className='w-full max-w-2xl grid grid-cols-1 md:grid-cols-2 gap-10 group'>
+          <div className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-2 gap-10 group">
             {options?.map((option, index) => (
               <Card
                 key={index}
                 content={option.replace(/^O\d+:/, "").trim()}
-                className='card text-white !bg-[#303030] hover:!bg-white transform transition-transform duration-150 hover:scale-115 hover:shadow-none group-hover:shadow-[0px_0px_20px_white] group-hover:blur-[1px] group-hover:hover:blur-none hover:text-black text-lg !rounded-3xl'
+                className="card text-white !bg-[#303030] hover:!bg-white transform transition-transform duration-150 hover:scale-115 hover:shadow-none group-hover:shadow-[0px_0px_20px_white] group-hover:blur-[1px] group-hover:hover:blur-none hover:text-black text-lg !rounded-3xl"
                 onClick={() => handleAnswer(option)}
               />
             ))}
@@ -239,26 +246,61 @@ const PersonalTest = () => {
         </div>
       )}
 
+      {/* Move to Political Statements next */}
       {showNextSet && currentSet === "" && (
-        <div className='flex flex-col items-center space-y-8'>
+        <div className="flex flex-col items-center space-y-8">
           <button
-            className='card text-white !bg-[#303030] hover:!bg-white transform transition-transform duration-200 hover:scale-110 hover:text-black mt-4 mb-4 py-4 px-6 text-lg rounded-lg border-1 border-white'
-            onClick={() => setCurrentSet("age")}
+            className="card text-white !bg-[#303030] hover:!bg-white transform transition-transform duration-200 hover:scale-110 hover:text-black mt-4 mb-4 py-4 px-6 text-lg rounded-lg border-1 border-white"
+            onClick={() => {
+              setCurrentSet("politics");
+              fetchPoliticianStatements();
+            }}
           >
             Next Set
-          </button>
-          <button
-            className='card text-white !bg-[#303030] hover:!bg-white transform transition-transform duration-200 hover:scale-110 hover:text-black mt-4 mb-4 py-4 px-6 text-lg rounded-lg border-1 border-white'
-            onClick={() => alert(`Your answers:\n${userAnswers.join("\n")}`)}
-          >
-            Review My Answers
           </button>
         </div>
       )}
 
+      {/* Politician Statements */}
+      {currentSet === "politics" && currentRound < politicianStatements.length && (
+        <div className="w-full max-w-5xl flex flex-col items-center space-y-8">
+          {loadingPoliticianStatements ? (
+            <div className="text-2xl text-white font-medium animate-pulse mt-12">
+              Loading Content...
+            </div>
+          ) : (
+            <>
+              <h2 className="text-2xl font-medium text-white mb-4">
+                Pick the statement you agree with more:
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+                {[0, 1].map((offset) => {
+                  const index = currentRound + offset;
+                  if (index >= politicianStatements.length) return null;
+
+                  const cleanStatement = politicianStatements[index].replace(/^\d+\.\s*/, "");
+
+                  return (
+                    <Card
+                      key={index}
+                      content={cleanStatement}
+                      className="card text-white !bg-[#303030] hover:!bg-white transform transition-transform duration-150 hover:scale-115 hover:text-black text-lg !rounded-3xl"
+                      onClick={() => handlePoliticianAnswer(index)}
+                    />
+                  );
+                })}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Age Selection */}
       {currentSet === "age" && (
         <AgeSet onSelectAge={() => setCurrentSet("gender")} />
       )}
+
+      {/* Gender Selection */}
       {currentSet === "gender" && (
         <GenderSet onSelectGender={() => setShowResult(true)} />
       )}

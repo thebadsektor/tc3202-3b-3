@@ -3,3 +3,7 @@ google-genai
 flask
 flask-cors
 concurrently
+
+pandas
+sklearn
+numpy

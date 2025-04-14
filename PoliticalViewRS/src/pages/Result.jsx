@@ -18,7 +18,7 @@ const Result = ({ predictedValues, matchedCandidates }) => {
               <div className='flex flex-col lg:flex-row gap-8 w-full max-w-6xl justify-center'>
           
                 {/* Predicted Values */}
-                <div className='bg-gray-800 bg-opacity-50 p-6 rounded-xl w-fit max-w-full'>
+                <div className='bg-[#303030] bg-opacity-50 p-6 rounded-xl w-fit max-w-full'>
                   <p className='text-xl text-white mb-2'>
                     Based on your responses,<br/> your predicted values are:
                   </p>
@@ -33,7 +33,7 @@ const Result = ({ predictedValues, matchedCandidates }) => {
                 </div>
           
                 {/* Matched Candidates */}
-                <div className='bg-gray-800 bg-opacity-50 p-6 rounded-xl w-fit max-w-full'>
+                <div className='bg-[#303030] bg-opacity-50 p-6 rounded-xl w-fit max-w-full'>
                   <p className='text-xl text-white mb-2'>Top Matching Candidates:</p>
                   <br /> <br />
                   <ul className='space-y-2'>
