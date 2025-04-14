@@ -16,7 +16,7 @@ function GetStarted() {
   }, []);
 
   return (
-    <div className='flex flex-col min-h-screen'>
+    <div className='GetStartedPage min-h-screen overflow-hidden'>
   <div
     style={{
       backgroundImage: `url(${bgImage})`,
@@ -24,9 +24,9 @@ function GetStarted() {
       backgroundPosition: "bottom",
       backgroundSize: "contain",
     }}
-    className='relative flex-1 w-full bg-[#202021] text-white flex flex-col'
+    // className='relative flex-1 w-full bg-[#202021] text-white flex flex-col'
+    className="relative w-full h-screen flex flex-col justify-center items-center text-white"
   >
-    <Header />
 
     <div className='absolute top-32 left-0 right-0 text-center px-4'>
       <h1 className='text-3xl md:text-4xl font-semibold'>
@@ -44,7 +44,6 @@ function GetStarted() {
     </div>
   </div>
 
-  <Footer />
 </div>
 
   );
