@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Result from "./Result";
-import bgImage from "../assets/Background.png";
 
 // Card Component - Simplified and more consistent
 const Card = ({ content, className = "", onClick }) => {
@@ -17,11 +15,6 @@ const Card = ({ content, className = "", onClick }) => {
 // AgeSet Component - Improved with better accessibility
 const AgeSet = ({ onSelectAge }) => {
   const ageOptions = ["18-24", "25-34", "35-44", "45-54", "55+"];
-
-  useEffect(() => {
-    document.title = "Select Age";
-  }, []);
-
 
   return (
     <div className='flex flex-col items-center space-y-8'>
@@ -44,10 +37,6 @@ const AgeSet = ({ onSelectAge }) => {
 const GenderSet = ({ onSelectGender }) => {
   const genderOptions = ["Male", "Female", "Other"];
 
-  useEffect(() => {
-    document.title = "Select Gender";
-  }, []);
-
   return (
     <div className='flex flex-col items-center space-y-8'>
       <p className='text-2xl font-medium text-white mb-4'>Gender</p>
@@ -65,6 +54,102 @@ const GenderSet = ({ onSelectGender }) => {
   );
 };
 
+// Result Component - More polished presentation
+// const Result = ({ predictedValues, userAnswers }) => {
+// const Result = ({ predictedValues }) => {
+
+//    // Remove prefix and split by asterisk
+//    console.log(predictedValues);
+//    const valuesOnly = predictedValues
+//    .replace(/Based on your responses, your predicted values are:/i, '')
+//    .split('*')
+//    .map(val => val.trim())
+//    .filter(val => val.length > 0); // Filter out empty strings
+
+//   return (
+//     <div className='min-h-screen bg-[#212121] p-12 flex flex-col items-center justify-center text-white'>
+//       <div className='bg-gray-800 bg-opacity-50 p-6 rounded-xl mb-8'>
+//         <p className='text-xl text-white'>
+//           Based on your responses, your predicted values are:
+//         </p>
+//         <br />
+//         <ul className='list-disc list-inside space-y-2'>
+//           {valuesOnly.map((value, index) => (
+//             <li key={index} className='text-white text-lg'>
+//               {value}
+//             </li>
+//           ))}
+//         </ul>
+
+//       </div>
+
+//       {/* <ul className='space-y-0'>
+//         {userAnswers.map((answer, index) => (
+//           <li key={index} className='bg-gray-800 bg-opacity-30 p-4 rounded-lg'>
+//             <p className='text-white'>{answer}</p>
+//           </li>
+//         ))}
+//       </ul> */}
+//     </div>
+//   );
+// };
+
+
+const Result = ({ predictedValues, matchedCandidates }) => {
+  const valuesOnly = Array.isArray(predictedValues)
+    ? predictedValues
+    : predictedValues
+        .split('*')
+        .map((val) => val.trim())
+        .filter((val) => val.length > 0);
+
+  console.log("Candidates: ",matchedCandidates);
+  console.log(predictedValues);
+
+  return (
+    <div className='min-h-screen bg-[#212121] p-12 flex flex-col items-center justify-center text-white'>
+      {/* Predicted Values Section */}
+      <div className='bg-gray-800 bg-opacity-50 p-6 rounded-xl mb-8 w-full max-w-2xl'>
+        <p className='text-xl text-white mb-4'>
+          Based on your responses, your predicted values are:
+        </p>
+        <ul className='list-disc list-inside space-y-2'>
+          {valuesOnly.map((value, index) => (
+            <li key={index} className='text-white text-lg'>
+              {value}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Matched Candidates Section */}
+      {matchedCandidates?.length > 0 && (
+        <div className='bg-gray-800 bg-opacity-50 p-6 rounded-xl w-full max-w-2xl'>
+          <p className='text-xl text-white mb-4'>
+            Candidates that closely match your values:
+          </p>
+          <ul className='space-y-3'>
+            {matchedCandidates.map((candidate, index) => (
+              <li
+                key={index}
+                className='text-white text-lg flex justify-between border-b border-gray-600 pb-2'
+              >
+                <span>
+                  {candidate.candidate_name} ({candidate.party})
+                </span>
+                <span className='text-sm text-gray-400'>
+                  Match Score: {(1 - candidate.distance).toFixed(2)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+};
+
+
 // Main PersonalTest Component - Better organized and more robust
 const PersonalTest = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -77,21 +162,11 @@ const PersonalTest = () => {
   const [showResult, setShowResult] = useState(false);
   const [predictedValues, setPredictedValues] = useState("");
   const [matchedCandidates, setMatchedCandidates] = useState([]);
-  // const [initialLoading, setInitialLoading] = useState(true);
 
-
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setInitialLoading(false);
-  //   }, 1000); 
   
-  //   return () => clearTimeout(timer);
-  // }, []);
 
   useEffect(() => {
     const fetchStatements = async () => {
-      document.title = "Personality Test";
-
       try {
         const response = await fetch(`http://127.0.0.1:5000/get-statements`);
         if (!response.ok) throw new Error("Network response was not ok");
@@ -120,24 +195,21 @@ const PersonalTest = () => {
     }, []);
   };
 
-  const fetchMatchingCandidates = async (answers) => {
-    try {
-      const response = await fetch("http://127.0.0.1:5000/match-based-on-answers", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ answers }),
-      });
-  
-      if (!response.ok) throw new Error("Failed to fetch matched candidates");
-  
-      const result = await response.json();
-      return result.matches || [];
-    } catch (error) {
-      console.error("Error fetching matched candidates:", error);
-      return [];
-    }
-  };
+  // const fetchPrediction = async (answers) => {
+  //   try {
+  //     const response = await fetch("http://127.0.0.1:5000/predict-values", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ answers }),
+  //     });
 
+  //     if (!response.ok) throw new Error("Failed to fetch prediction");
+  //     const result = await response.json();
+  //     setPredictedValues(result.predicted_values);
+  //   } catch (error) {
+  //     setError("Error fetching prediction: " + error.message);
+  //   }
+  // };
 
   const fetchPrediction = async (answers) => {
     try {
@@ -148,19 +220,16 @@ const PersonalTest = () => {
       });
   
       if (!response.ok) throw new Error("Failed to fetch prediction");
-  
       const result = await response.json();
-      setPredictedValues(result.predicted_values);
   
-      // 🔥 Use the function here
-      const matches = await fetchMatchingCandidates(answers);
-      setMatchedCandidates(matches);
+      setPredictedValues(result.predicted_values);
+      setMatchedCandidates(result.matches); // <-- add this line
     } catch (error) {
-      setError("Error fetching prediction or matches: " + error.message);
+      setError("Error fetching prediction: " + error.message);
     }
   };
-
   
+
   const handleAnswer = (answer) => {
     const newAnswers = [...userAnswers, answer];
     setUserAnswers(newAnswers);
@@ -176,27 +245,15 @@ const PersonalTest = () => {
   const currentQuestion = questions[currentQuestionIndex] || {};
   const { question, options } = currentQuestion;
 
-  // if (initialLoading) {
-  //   return (
-  //     <div className="min-h-screen bg-[#121212] flex items-center justify-center text-white">
-  //       <div className="text-2xl animate-pulse">Preparing your test...</div>
-  //     </div>
-  //   );
-  // }
-
   if (loading) {
     return (
-      <div
-        style={{ backgroundImage: `url(${bgImage})` }}
-        className='fixed top-0 left-0 w-full h-full bg-cover bg-center flex items-center justify-center text-white text-center z-50'
-      >
-        <div className='text-3xl font-medium text-white animate-pulse'>
+      <div className='min-h-screen flex items-center justify-center'>
+        <div className='text-3xl font-medium text-white'>
           Loading content...
         </div>
       </div>
     );
   }
-  
 
   if (error) {
     return (
@@ -206,21 +263,23 @@ const PersonalTest = () => {
     );
   }
 
+  // if (showResult) {
+  //   return (
+  //     <Result predictedValues={predictedValues} userAnswers={userAnswers} />
+  //   );
+  // }
+
   if (showResult) {
     return (
       <Result
         predictedValues={predictedValues}
-        userAnswers={userAnswers}
-        matchedCandidates={matchedCandidates} // 🆕
+        matchedCandidates={matchedCandidates}
       />
     );
   }
 
   return (
-    <div
-       style={{ backgroundImage: `url(${bgImage})` }}
-       className='min-h-screen bg-cover bg-center p-12 flex flex-col items-center justify-center text-white text-center'
-     >
+    <div className='min-h-screen bg-base-200 p-12 flex flex-col items-center justify-center text-white text-center'>
       {!showNextSet && currentSet === "" && question && (
         <div className='w-full max-w-2xl mb-12'>
           <h2 className='text-3xl md:text-3xl font-medium text-white mb-12'>

@@ -48,10 +48,10 @@ List the main features of the project:
 - Feature 3: Brief description.
 
 ## Technologies Used
-
-- Programming Languages: Python, JavaScript
-- Frameworks/Libraries: React, Flask
-- Databases: MongoDB
+Mention the tools, frameworks, and technologies used in the project:
+- Programming Languages: [e.g., Python, JavaScript, etc.]
+- Frameworks/Libraries: [e.g., React, Flask, etc.]
+- Databases: [e.g., MySQL, MongoDB, etc.]
 - Other Tools: Git
 
 ## Setup and Installation
@@ -123,14 +123,13 @@ Explain the structure of the project directory. Example:
 ```
 
 ## Contributors
-
 - **Antopina, Junie**: Lead Developer, Backend Developer
 - **Delos Reyes, Genesis**: Backend Developer
-- **Gabot, Angelo**: Full Stack Developer
 - **Dolorico, Nicole**: Documentation
+- **Gabot, Angelo**: Full Stack Developer
+- **Gerald Villaran**: Course Instructor
 
 ## Project Timeline
-
 - **Week 1-2**: Research and project planning.
 - **Week 3-5**: Design and setup.
 - **Week 6-10**: Implementation.

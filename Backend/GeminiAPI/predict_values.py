@@ -19,11 +19,11 @@ def predict_values_based_on_answers(answers):
         # Join the user answers into a format that Gemini can process
         formatted_answers = "\n".join([f"Answer {i+1}: {answer}" for i, answer in enumerate(answers)])
 
-        prompt = f"""Based on the following answers to personality test questions, analyze and identify the person's likely core values and beliefs:
+        prompt = f"""Based on the following answers to personality test questions, identify and list only the most prominent core values and beliefs — the ones that are clearly emphasized or have the highest scores:
 
         {formatted_answers}
 
-                Return only a bulleted list of core values (e.g., Ambition, Honesty, Caring). 
+        Return only a bulleted list of core values (e.g., Ambition, Honesty, Caring). 
         Do not include any explanations or additional text. Just output the values.
         Example format:
         * Ambition

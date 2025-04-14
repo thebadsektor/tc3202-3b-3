@@ -4,9 +4,9 @@ import Footer from '../components/Footer';
 
 function Layout({ children }) {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-[#202021]">
       <Header />
-      <main className="flex-1">{children}</main>  {/* This will be dynamic content */}
+      <main className="flex-1">{children}</main> 
       <Footer />
     </div>
   );
