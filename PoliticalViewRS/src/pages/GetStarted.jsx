@@ -119,7 +119,7 @@ function GetStarted() {
             </button>
             <h2 className='text-2xl font-bold mb-4'>Before You Begin</h2>
             <p className='mb-6'>
-              This recommendation system analyzes your values through a short question and answer to determine your political alignment. It only takes a few minutes and helps match you with candidates that share your views.
+              Political View Recommendation System analyzes your values through a short question and answer to determine your political alignment. It only takes a few minutes and helps match you with candidates that share your views.
             </p>
             <button
               onClick={() => navigate("/personal-test")}
