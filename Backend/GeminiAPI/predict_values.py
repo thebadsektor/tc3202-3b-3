@@ -24,11 +24,7 @@ def predict_values_based_on_answers(answers):
         {formatted_answers}
 
         Return only a bulleted list of core values (e.g., Ambition, Honesty, Caring). 
-        Do not include any explanations or additional text. Just output the values.
-        Example format:
-        * Ambition
-        * Honesty
-        * Creativity"""
+        Do not include any explanations or additional text. Just output the values."""
 
         # Call the Gemini API
         response = model.generate_content(prompt)

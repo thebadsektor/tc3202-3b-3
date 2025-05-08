@@ -1,18 +1,76 @@
 import "./App.css";
-import GetStarted from "./pages/GetStarted";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import PersonalTest from "./pages/PersonalTest"; 
+import { BrowserRouter as Router } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 
-function App() {
-  // const [results, setResults] = useState([]);
+// ✅ All page and layout imports
+import Layout from "./components/Layout";
+import SimpleLayout from "./components/SimpleLayout";
+import GetStarted from "./pages/GetStarted";
+import AboutUs from "./pages/AboutUs";
+import PersonalTest from "./pages/PersonalTest";
+import Result from "./pages/Result";
+import MediaWebsites from "./pages/MediaWebsites";
+import CandidateProfile from "./pages/CandidateProfile";
+
+import { Routes, Route, useLocation } from "react-router-dom";
+
+function AnimatedRoutes() {
+  const location = useLocation();
 
   return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route
+          path="/"
+          element={
+            <Layout>
+              <GetStarted />
+            </Layout>
+          }
+        />
+        <Route
+          path="/about"
+          element={
+            <Layout>
+              <AboutUs />
+            </Layout>
+          }
+        />
+        <Route
+          path="/political-test"
+          element={
+            <SimpleLayout>
+              <PersonalTest />
+            </SimpleLayout>
+          }
+        />
+        <Route
+          path="/result"
+          element={
+            <Layout>
+              <Result />
+            </Layout>
+          }
+        />
+        <Route
+          path="/news-sites"
+          element={
+            <Layout>
+              <MediaWebsites />
+            </Layout>
+          }
+        />
+        <Route path="/candidate/:slug" element={<CandidateProfile />} />
+      </Routes>
+    </AnimatePresence>
+  );
+}
+
+function App() {
+  return (
     <Router>
-     <Routes>
-         <Route path='/' element={<GetStarted />} />
-         <Route path='/personal-test' element={<PersonalTest />} />
-       </Routes>
-  </Router>
+      <AnimatedRoutes />
+    </Router>
   );
 }
 
