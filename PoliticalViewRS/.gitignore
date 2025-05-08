@@ -28,6 +28,7 @@ dist-ssr
 # Public directory
 public
 data
+Developers
 
 # Node modules in parent directory
 ../node_modules
