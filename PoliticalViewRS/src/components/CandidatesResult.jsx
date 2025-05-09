@@ -28,7 +28,7 @@ const CandidatesResult = ({ name, party, imageUrl }) => {
         className="bg-[#fff] text-[#003366] font-semibold px-4 py-2 rounded-md hover:bg-blue-100 transition"
         onClick={handleViewMore}
       >
-        Profile
+        View More
       </button>
     </div>
   );
