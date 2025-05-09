@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import logo from "../assets/Municipal icon.png";
 
@@ -9,8 +9,8 @@ const Header = ({ setShowModal }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   // const location = useLocation();
-  const navigate = useNavigate();
-  const resultExists = !!localStorage.getItem("analysisResult");
+  // const navigate = useNavigate();
+  // const resultExists = !!localStorage.getItem("analysisResult");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -85,7 +85,7 @@ const Header = ({ setShowModal }) => {
         </ul>
 
         {/* Take the Test Button (always visible) */}
-        <button
+        {/* <button
           onClick={() => {
             if (resultExists) {
               navigate("/result");
@@ -96,6 +96,13 @@ const Header = ({ setShowModal }) => {
           className="text-white font-bold bg-[#404040] hover:bg-white hover:text-black transition duration-200 py-2 px-5 rounded-sm hidden md:block cursor-pointer"
         >
           {resultExists ? "Your Result" : "Take the Test"}
+        </button> */}
+
+        <button
+          onClick={() => setShowModal(true)}
+          className="text-white font-bold bg-[#404040] hover:bg-white hover:text-black transition duration-200 py-2 px-5 rounded-sm hidden md:block cursor-pointer"
+        >
+          Take the Test
         </button>
 
         {/* Mobile Dropdown Menu */}
@@ -129,7 +136,7 @@ const Header = ({ setShowModal }) => {
             >
               Values & Beliefs Type
             </Link>
-            <button
+            {/* <button
               onClick={() => {
                 if (resultExists) {
                   navigate("/result");
@@ -141,6 +148,16 @@ const Header = ({ setShowModal }) => {
               className="bg-[#404040] hover:bg-white hover:text-black cursor-pointer transition duration-200 py-2 px-5 rounded-sm font-bold w-3/4"
             >
               {resultExists ? "Your Result" : "Take the Test"}
+            </button> */}
+
+            <button
+              onClick={() => {
+                setShowModal(true);
+                toggleMenu();
+              }}
+              className="bg-[#404040] hover:bg-white hover:text-black cursor-pointer transition duration-200 py-2 px-5 rounded-sm font-bold w-3/4"
+            >
+              Take the Test
             </button>
           </div>
         )}

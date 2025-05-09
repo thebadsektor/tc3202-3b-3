@@ -19,11 +19,16 @@ csv_path = os.path.abspath(os.path.join(base_dir, "..", "politician_articles.csv
 
 # Read and combine article content
 try:
-    df = pd.read_csv(csv_path)
+    df = pd.read_csv(csv_path, encoding="latin1")  # or encoding="ISO-8859-1"
     combined_text = " ".join(df['article_text'].dropna())
+except FileNotFoundError:
+    raise FileNotFoundError(f"Could not find 'cleaned_utf8_file.csv' at {csv_path}")
+except UnicodeDecodeError:
+    raise UnicodeDecodeError("Failed to decode 'cleaned_utf8_filecleaned_utf8_file.csv'. Try re-saving as UTF-8.")
 except Exception as e:
     combined_text = ""
     print(f"❌ Error loading articles: {e}")
+
 
 # Core comparison function
 def generate_user_politician_comparison(user_values):
@@ -61,27 +66,40 @@ def generate_user_politician_comparison(user_values):
 
         # Compose the Gemini prompt
         prompt = f"""
-You are a political analyst AI. Your task is to analyze and compare the user's predicted values with the values of various Filipino politicians.
+You are a political analyst AI. Your task is to compare the user's predicted values with the inferred values and priorities of various Filipino politicians based on article content.
 
-The user's predicted values are:
+---
+
+🔍 The user's predicted values are:
 {user_values}
 
-Using the following article content (which contains insights into the values, beliefs, and actions of various politicians), do the following:
+📄 Below is a collection of article content, each containing insights into the beliefs, actions, and public statements of various politicians.
 
-1. Identify the politicians whose values **closely align** with the user's.
-2. Rank only those politicians from most aligned to least aligned — include **only those with meaningful alignment**.
-3. For each ranked politician, explain clearly why their values match the user's, using specific references or inferred themes from the article content.
-4. Exclude any politician who does **not meaningfully align** with the user's values.
-5. Format the output exactly as follows:
+---
+
+Your task:
+
+1. Identify **up to 5 politicians** whose values **significantly overlap** with the user's. Do not stop at the first match.
+2. Consider alignment meaningful if the politician shares **at least two values** with the user (you may infer values from their actions, policies, or language in the text).
+3. Rank them **from most to least aligned**, based on how many values match and how strongly they express those values.
+4. For each politician, explain your reasoning clearly — reference themes or phrases from the article where possible.
+5. Do **not include** any politician who does not align with at least two user values.
+
+---
+
+✍️ Format your response exactly like this:
 
 1. [Politician Name]  
-Reason: [Concise explanation based on article content]
+Reason: [Brief explanation why their values align with the user's values]
 
-Here is the article content to analyze:
-\"\"\"
+---
+
+📜 Article Content to Analyze:
+\"\"\" 
 {text_to_use}
 \"\"\"
 """
+
 
         # Generate Gemini response
         response = model.generate_content(prompt)
