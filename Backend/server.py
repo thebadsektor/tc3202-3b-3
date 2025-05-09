@@ -6,6 +6,7 @@ from GeminiAPI.politician_statements import generate_politician_statements
 from model.match_candidates import match_candidates
 from GeminiAPI.politician_values import Politicians_Values 
 from GeminiAPI.politician_comparison import generate_user_politician_comparison
+from GeminiAPI.get_politician_matches import get_matching_politicians
 from GeminiAPI.candidate_utils import enrich_with_candidate_data
 
 
@@ -120,27 +121,79 @@ def get_politician_values():
         return jsonify({'error': 'Error generating politician values: ' + str(e)}), 500
     
 
+# @app.route('/get-comparison-analysis', methods=['POST'])
+# def get_comparison_analysis():
+#     try:
+#         data = request.get_json()
+#         user_answers = data.get('answers')
+#         if not user_answers:
+#             return jsonify({'error': 'No answers provided'}), 400
+
+#         # Predict values
+#         predicted_text = predict_values_based_on_answers(user_answers)
+#         predicted_values = [
+#             val.replace("* ", "").strip()
+#             for val in predicted_text.strip().splitlines()
+#             if val.startswith("*")
+#         ]
+
+#         # Generate Gemini comparison result
+#         gemini_result = generate_user_politician_comparison(predicted_values)
+
+#         # Build card-ready enriched output
+#         enriched_result = enrich_with_candidate_data(gemini_result)
+
+#         return jsonify({
+#             'predicted_values': predicted_values,
+#             'analysis': enriched_result
+#         })
+
+#     except Exception as e:
+#         return jsonify({'error': f'Error generating analysis: {str(e)}'}), 500
+
+
 @app.route('/get-comparison-analysis', methods=['POST'])
 def get_comparison_analysis():
+    from GeminiAPI.predict_values import predict_values_based_on_answers
+    from GeminiAPI.politician_comparison import generate_user_politician_comparison
+    from GeminiAPI.candidate_utils import enrich_with_candidate_data
+
     try:
         data = request.get_json()
+        print("📥 Received data:", data)
+
         user_answers = data.get('answers')
         if not user_answers:
             return jsonify({'error': 'No answers provided'}), 400
 
         # Predict values
+        # Step 1: Predict core values
         predicted_text = predict_values_based_on_answers(user_answers)
+        print("🧠 Raw predicted text from Gemini:", predicted_text)
+
+        # Step 2: Parse predicted values from bullet list
         predicted_values = [
             val.replace("* ", "").strip()
             for val in predicted_text.strip().splitlines()
             if val.startswith("*")
+            if val.strip().startswith("*")
         ]
+        print("✅ Parsed predicted values:", predicted_values)
+
+        if not predicted_values:
+            return jsonify({'error': 'No predicted values could be extracted'}), 500
 
         # Generate Gemini comparison result
         gemini_result = generate_user_politician_comparison(predicted_values)
+        # Step 3: Get Gemini's politician matching output (raw)
+        gemini_result_text = generate_user_politician_comparison(predicted_values)
+        print("📄 Gemini response text:\n", gemini_result_text)
 
         # Build card-ready enriched output
         enriched_result = enrich_with_candidate_data(gemini_result)
+        # Step 4: Extract structured match data
+        enriched_result = enrich_with_candidate_data(gemini_result_text)
+        print("📦 Enriched matches:", enriched_result)
 
         return jsonify({
             'predicted_values': predicted_values,
@@ -149,6 +202,8 @@ def get_comparison_analysis():
 
     except Exception as e:
         return jsonify({'error': f'Error generating analysis: {str(e)}'}), 500
+        print(f"❌ ERROR in /get-comparison-analysis: {e}")
+        return jsonify({'error': f'Internal server error: {str(e)}'}), 500
     
 
 # Start the Flask app
