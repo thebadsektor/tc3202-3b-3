@@ -3,7 +3,7 @@ import pandas as pd
 import google.generativeai as genai
 from dotenv import load_dotenv
 
-def Politicians_Values():
+def Politicians_Values(language='english'):
     # Load environment variables
     load_dotenv()
     api_key = os.getenv("API_KEY")
@@ -17,8 +17,8 @@ def Politicians_Values():
 
     # Dynamically resolve path to politician_articles.csv
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    csv_path = os.path.abspath(os.path.join(base_dir, "..", "politician_articles.csv"))
-
+    data_dir = os.path.join(base_dir, "..", "data")
+    csv_path = os.path.join(data_dir, "politician_articles.csv")
     try:
         df = pd.read_csv(csv_path)
     except Exception as e:
@@ -29,7 +29,28 @@ def Politicians_Values():
 
     output = {}
     for candidate, articles in grouped.items():
-        prompt = f"""
+        if language.lower() == 'tagalog':
+            prompt = f"""
+I-analyze ang mga sumusunod na artikulo tungkol kay {candidate} at ibuod ang kanilang mga pangunahing pinahahalagahan at paniniwala.
+
+Teksto:
+{articles[:3000]}
+
+Magbigay ng 2 hanggang 4 na pangunahing katangian o kalidad ng pamumuno gamit lamang ang malinaw at simpleng dalawang salita o phrase bawat isa. Iwasan ang mahahaba o malalalim na salita. Gamitin lamang ang karaniwang Tagalog na madaling maintindihan.
+
+Halimbawa:
+- Visionaryo
+- Tapat na Lider
+- Tagapagtanggol ng Kabataan
+
+Format ng output:
+{candidate}
+    Katangian1
+    Katangian2
+    Katangian3
+"""
+        else:
+            prompt = f"""
 Analyze the following articles about {candidate} and summarize their most prominent core values and beliefs.
 
 Text:

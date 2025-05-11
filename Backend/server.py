@@ -1,5 +1,9 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+import uuid
+from dotenv import load_dotenv
+from mongodb import db
+
 from GeminiAPI.generatestatement import generate_content
 from GeminiAPI.predict_values import predict_values_based_on_answers
 from GeminiAPI.politician_statements import generate_politician_statements
@@ -9,64 +13,87 @@ from GeminiAPI.politician_comparison import generate_user_politician_comparison
 from GeminiAPI.get_politician_matches import get_matching_politicians
 from GeminiAPI.candidate_utils import enrich_with_candidate_data
 
-
-from dotenv import load_dotenv
-
-# Initialize Flask app
 app = Flask(__name__)
-
-# Enable CORS (Allowing cross-origin requests, adjust the origins if needed)
 CORS(app)
-
-# Load environment variables from .env file
 load_dotenv()
 
-# 📄 Endpoint to get generated statements
+@app.route('/', methods=['GET'])
+def home():
+    return "✅ Personality API is running!"
+
+# ✅ Updated: /get-statements
 @app.route('/get-statements', methods=['GET'])
 def get_statements():
     try:
-        print("Regenerating statements")
-        generated_content = generate_content()
+        language = request.args.get("language", "english")
+        print(f"Regenerating statements in {language}")
+        generated_content = generate_content(language=language)
         statements = generated_content.split('\n')
         cleaned_statements = [s.strip() for s in statements if s.strip()]
         return jsonify(cleaned_statements)
     except Exception as e:
         return jsonify({'error': 'Error generating statements: ' + str(e)}), 500
 
-# 📄 Endpoint to generate statements from politicians.pdf
+# ✅ Updated: /get-politician-statements
 @app.route('/get-politician-statements', methods=['GET'])
 def get_politician_statements():
     try:
-        generated_content = generate_politician_statements()
+        language = request.args.get("language", "english")
+        generated_content = generate_politician_statements(language=language)
         statements = generated_content.split('\n')
         cleaned_statements = [s.strip() for s in statements if s.strip()]
         return jsonify(cleaned_statements)
     except Exception as e:
         return jsonify({'error': 'Error generating politician statements: ' + str(e)}), 500
 
-# 🧑‍💻 Endpoint to predict values based on user answers
+# ✅ Updated: /predict-values
 @app.route('/predict-values', methods=['POST'])
 def predict_values():
     try:
-        data = request.get_json()
+        data = request.get_json(silent=True) or {}
         if not data or 'answers' not in data:
             return jsonify({'error': 'No answers provided'}), 400
-            
+
         answers = data['answers']
-        if not isinstance(answers, list):
-            return jsonify({'error': 'Answers should be an array'}), 400
-            
-        predicted_values = predict_values_based_on_answers(answers)
+        language = data.get('language', 'english')
+        chat_id = str(uuid.uuid4())
 
-        # Print predicted values to console for debugging
-        print("Predicted values:", predicted_values)
+        predicted_values = predict_values_based_on_answers(
+            answers, chat_id=chat_id, language=language
+        )
 
-        return jsonify({'predicted_values': predicted_values})
+        print("📊 Predicted Values:", predicted_values)
+
+        db["predicted_user_values"].insert_one({
+            "chatId": chat_id,
+            "answers": answers,
+            "predicted_values": predicted_values
+        })
+
+        return jsonify({
+            'chatId': chat_id,
+            'predicted_values': predicted_values
+        })
+
     except Exception as e:
+        print("❌ Server error:", str(e))
         return jsonify({'error': 'Error predicting values: ' + str(e)}), 500
 
+@app.route('/get-predicted-values/<chat_id>', methods=['GET'])
+def get_predicted_values(chat_id):
+    try:
+        record = db["predicted_user_values"].find_one({"chatId": chat_id})
+        if not record:
+            return jsonify({'error': 'Prediction not found'}), 404
 
-# Endpoint for matching user values to candidate values
+        return jsonify({
+            'chatId': chat_id,
+            'predicted_values': record.get("predicted_values", {}),
+            'answers': record.get("answers", [])
+        })
+    except Exception as e:
+        return jsonify({'error': f'Failed to fetch prediction: {str(e)}'}), 500
+
 @app.route('/match-based-on-answers', methods=['POST'])
 def match_based_on_answers():
     try:
@@ -75,31 +102,15 @@ def match_based_on_answers():
             return jsonify({'error': 'No answers provided'}), 400
 
         answers = data['answers']
-        
-        # Predict values from answers 
-        raw_values_text = predict_values_based_on_answers(answers)
+        language = data.get("language", "english")
+        raw_values_dict = predict_values_based_on_answers(answers, language=language)
 
-        # Convert text response to a list
-        predicted_values = [
-            line.replace("* ", "").strip()
-            for line in raw_values_text.strip().splitlines()
-            if line.startswith("*")
-        ]
-
-        if not predicted_values:
+        if isinstance(raw_values_dict, dict):
+            predicted_values = list(raw_values_dict.keys())
+        else:
             return jsonify({'error': 'Could not extract predicted values'}), 500
 
-        # Match candidates based on predicted values
         matched = match_candidates(predicted_values, csv_path="../../senator_candidates.csv")
-
-        # Print predicted values and matches to console for debugging
-        print("Predicted Values:")
-        for val in predicted_values:
-            print(f"  * {val}")
-        
-        print("\nMatched Candidates:")
-        for candidate in matched:
-            print(f"  - {candidate['candidate_name']} ({candidate['party']})")
 
         return jsonify({
             'predicted_values': predicted_values,
@@ -108,104 +119,70 @@ def match_based_on_answers():
 
     except Exception as e:
         return jsonify({'error': 'Error matching candidates: ' + str(e)}), 500
-    
-    
-    # 📊 Endpoint to get politician core values from articles
+
+# ✅ Updated: /get-matching-politicians
+@app.route('/get-matching-politicians/<chat_id>', methods=['GET'])
+def get_matching_politicians_route(chat_id):
+    try:
+        language = request.args.get("language", "english")
+        print(f"🔍 Fetching matches for chatId: {chat_id} in {language}")
+        matches = get_matching_politicians(chat_id, language=language)
+
+        return jsonify({
+            "chatId": chat_id,
+            "matches": matches
+        })
+
+    except Exception as e:
+        return jsonify({'error': f'Error fetching matches: {str(e)}'}), 500
+
+# ✅ Updated: /get-politician-values
 @app.route('/get-politician-values', methods=['GET'])
 def get_politician_values():
     try:
-        print("Generating politician core values from articles")
-        result = Politicians_Values()
+        language = request.args.get("language", "english")
+        result = Politicians_Values(language=language)
         return jsonify(result)
     except Exception as e:
         return jsonify({'error': 'Error generating politician values: ' + str(e)}), 500
-    
 
-# @app.route('/get-comparison-analysis', methods=['POST'])
-# def get_comparison_analysis():
-#     try:
-#         data = request.get_json()
-#         user_answers = data.get('answers')
-#         if not user_answers:
-#             return jsonify({'error': 'No answers provided'}), 400
-
-#         # Predict values
-#         predicted_text = predict_values_based_on_answers(user_answers)
-#         predicted_values = [
-#             val.replace("* ", "").strip()
-#             for val in predicted_text.strip().splitlines()
-#             if val.startswith("*")
-#         ]
-
-#         # Generate Gemini comparison result
-#         gemini_result = generate_user_politician_comparison(predicted_values)
-
-#         # Build card-ready enriched output
-#         enriched_result = enrich_with_candidate_data(gemini_result)
-
-#         return jsonify({
-#             'predicted_values': predicted_values,
-#             'analysis': enriched_result
-#         })
-
-#     except Exception as e:
-#         return jsonify({'error': f'Error generating analysis: {str(e)}'}), 500
-
-
+# ✅ Updated: /get-comparison-analysis
 @app.route('/get-comparison-analysis', methods=['POST'])
 def get_comparison_analysis():
-    from GeminiAPI.predict_values import predict_values_based_on_answers
-    from GeminiAPI.politician_comparison import generate_user_politician_comparison
-    from GeminiAPI.candidate_utils import enrich_with_candidate_data
-
     try:
         data = request.get_json()
-        print("📥 Received data:", data)
+        chat_id = data.get('chatId')
+        language = data.get('language', 'english')
 
-        user_answers = data.get('answers')
-        if not user_answers:
-            return jsonify({'error': 'No answers provided'}), 400
+        if not chat_id:
+            return jsonify({'error': 'chatId is required'}), 400
 
-        # Predict values
-        # Step 1: Predict core values
-        predicted_text = predict_values_based_on_answers(user_answers)
-        print("🧠 Raw predicted text from Gemini:", predicted_text)
+        record = db["predicted_user_values"].find_one({"chatId": chat_id})
+        if not record:
+            return jsonify({'error': 'No predicted values found for this chatId'}), 404
 
-        # Step 2: Parse predicted values from bullet list
+        predicted_obj = record.get("predicted_values", {})
+        value_list = predicted_obj.get("values", [])
+
         predicted_values = [
-            val.replace("* ", "").strip()
-            for val in predicted_text.strip().splitlines()
-            if val.startswith("*")
-            if val.strip().startswith("*")
+            v["name"].strip()
+            for v in value_list
+            if isinstance(v, dict) and "name" in v and v.get("score", 0) >= 4
         ]
-        print("✅ Parsed predicted values:", predicted_values)
 
-        if not predicted_values:
-            return jsonify({'error': 'No predicted values could be extracted'}), 500
+        print(f"✅ Parsed predicted values for analysis: {predicted_values} ({language})")
 
-        # Generate Gemini comparison result
-        gemini_result = generate_user_politician_comparison(predicted_values)
-        # Step 3: Get Gemini's politician matching output (raw)
-        gemini_result_text = generate_user_politician_comparison(predicted_values)
-        print("📄 Gemini response text:\n", gemini_result_text)
-
-        # Build card-ready enriched output
+        gemini_result = generate_user_politician_comparison(predicted_values, language=language)
         enriched_result = enrich_with_candidate_data(gemini_result)
-        # Step 4: Extract structured match data
-        enriched_result = enrich_with_candidate_data(gemini_result_text)
-        print("📦 Enriched matches:", enriched_result)
 
         return jsonify({
+            'chatId': chat_id,
             'predicted_values': predicted_values,
             'analysis': enriched_result
         })
 
     except Exception as e:
         return jsonify({'error': f'Error generating analysis: {str(e)}'}), 500
-        print(f"❌ ERROR in /get-comparison-analysis: {e}")
-        return jsonify({'error': f'Internal server error: {str(e)}'}), 500
-    
 
-# Start the Flask app
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

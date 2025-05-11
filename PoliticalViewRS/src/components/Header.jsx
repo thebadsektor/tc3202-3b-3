@@ -1,16 +1,39 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import logo from "../assets/Municipal icon.png";
 
 const Header = ({ setShowModal }) => {
   const [showHeader, setShowHeader] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [resultExists, setResultExists] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // const location = useLocation();
-  const navigate = useNavigate();
-  const resultExists = !!localStorage.getItem("analysisResult");
+  useEffect(() => {
+    const fetchResultStatus = async () => {
+      const chatId = localStorage.getItem("chatId");
+      if (!chatId) return;
+
+      try {
+        const response = await fetch(
+          "http://127.0.0.1:5000/get-comparison-analysis",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ chatId }),
+          }
+        );
+
+        if (!response.ok) throw new Error("Request failed");
+        const data = await response.json();
+        setResultExists(data.analysis && data.analysis.length > 0);
+      } catch (error) {
+        console.error("❌ Header check failed:", error);
+        setResultExists(false);
+      }
+    };
+
+    fetchResultStatus();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -74,29 +97,37 @@ const Header = ({ setShowModal }) => {
               About us
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link
-              to="/values-beliefs"
+              to="/candidate-profile"
               className="block text-white font-bold no-underline hover:bg-white hover:text-black transition duration-200 py-2 px-5 rounded-sm text-center"
             >
-              Values & Beliefs Type
+              Profile
             </Link>
-          </li>
+          </li> */}
         </ul>
-
-        {/* Take the Test Button (always visible) */}
-        <button
-          onClick={() => {
-            if (resultExists) {
-              navigate("/result");
-            } else {
-              setShowModal(true);
+        {/* <Link
+          to={resultExists ? "/result" : "#"}
+          onClick={(e) => {
+            if (!resultExists) {
+              e.preventDefault(); // ❌ stop navigation
+              setShowModal(true); // ✅ open modal
             }
           }}
+          className="text-white font-bold bg-[#404040] hover:bg-white hover:text-black transition duration-200 py-2 px-5 rounded-sm hidden md:block cursor-pointer text-center"
+        >
+          {resultExists ? "Your Result" : "Take the Test"}
+        </Link> */}
+
+        {/* Take the Test Button (always visible) */}
+        {/* <button
+          onClick={() =>
+            resultExists ? navigate("/result") : setShowModal(true)
+          }
           className="text-white font-bold bg-[#404040] hover:bg-white hover:text-black transition duration-200 py-2 px-5 rounded-sm hidden md:block cursor-pointer"
         >
           {resultExists ? "Your Result" : "Take the Test"}
-        </button>
+        </button> */}
 
         {/* Mobile Dropdown Menu */}
         {menuOpen && (
@@ -122,26 +153,37 @@ const Header = ({ setShowModal }) => {
             >
               About us
             </Link>
-            <Link
-              to="/values-beliefs"
+
+            {/* <Link
+              to={resultExists ? "/result" : "#"}
+              onClick={(e) => {
+                if (!resultExists) {
+                  e.preventDefault();
+                  setShowModal(true);
+                }
+                toggleMenu(); // ✅ close mobile menu
+              }}
+              className="bg-[#404040] hover:bg-white hover:text-black cursor-pointer transition duration-200 py-2 px-5 rounded-sm font-bold w-3/4 text-center"
+            >
+              {resultExists ? "Your Result" : "Take the Test"}
+            </Link> */}
+
+            {/* <Link
+              to="/candidate-profile"
               className="block font-bold no-underline hover:bg-white hover:text-black transition duration-200 py-2 px-5 text-center"
               onClick={toggleMenu}
             >
-              Values & Beliefs Type
-            </Link>
-            <button
+              Profile
+            </Link> */}
+            {/* <button
               onClick={() => {
-                if (resultExists) {
-                  navigate("/result");
-                } else {
-                  setShowModal(true);
-                }
+                resultExists ? navigate("/result") : setShowModal(true);
                 toggleMenu();
               }}
               className="bg-[#404040] hover:bg-white hover:text-black cursor-pointer transition duration-200 py-2 px-5 rounded-sm font-bold w-3/4"
             >
               {resultExists ? "Your Result" : "Take the Test"}
-            </button>
+            </button> */}
           </div>
         )}
       </nav>

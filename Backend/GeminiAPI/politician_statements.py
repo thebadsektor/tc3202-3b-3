@@ -13,9 +13,9 @@ model = genai.GenerativeModel('gemini-1.5-flash')
 
 # Safely build path to CSV regardless of working directory
 base_dir = os.path.dirname(os.path.abspath(__file__))
-csv_path = os.path.abspath(os.path.join(base_dir, "..", "politician_articles.csv"))
+data_dir = os.path.join(base_dir, "..", "data")
+csv_path = os.path.join(data_dir, "politician_articles.csv")
 
-# Function to extract text from the CSV
 def extract_text_from_csv(path):
     try:
         df = pd.read_csv(path)
@@ -24,13 +24,34 @@ def extract_text_from_csv(path):
         print(f"❌ Error reading CSV: {e}")
         return ""
 
-# Main function to generate personality statements
-def generate_politician_statements():
+def generate_politician_statements(language='english'):
     try:
         content_text = extract_text_from_csv(csv_path)
         content_text = content_text[:4000]  # Truncate for Gemini prompt limit
 
-        prompt = f"""
+        if language.lower() == 'tagalog':
+            prompt = f"""
+Ikaw ay isang AI political psychologist. Batay sa mga sumusunod na nilalaman ng mga artikulo, bumuo ng 10 personality-assessing statements.
+
+Ang bawat statement ay dapat magbigay ng isang tanong na sinusundan ng dalawang pagpipilian na may label na O1 at O2:
+- Isa lamang ang dapat tumugma sa mga pinahahalagahan, paniniwala, o ideya sa artikulo.
+- Ang isa naman ay dapat magbigay ng kabaligtarang pananaw ngunit parehong positibo ang tono.
+- Huwag gumamit ng malalim o teknikal na Tagalog. Gumamit lamang ng simpleng Tagalog na madaling maintindihan ng karaniwang Pilipino.
+- Huwag maglagay ng pangalan ng politiko o reference ng source.
+- Huwag maglagay ng introduction o summary — ibigay lamang ang 10 statements sa eksaktong format.
+
+Format ng output:
+[Statement]
+O1: [Tugma sa article]
+O2: [Kabaligtaran ngunit positibo]
+
+Narito ang nilalaman ng artikulo para gamitin bilang inspirasyon:
+\"\"\"
+{content_text}
+\"\"\"
+"""
+        else:
+            prompt = f"""
 You are an AI political psychologist. Based on the following political article content, generate 10 personality-assessing statements.
 
 Each statement should present a topic followed by two answer choices labeled O1 and O2:
@@ -39,7 +60,6 @@ Each statement should present a topic followed by two answer choices labeled O1 
 - Do not include any politician names or source references.
 - Do not add introductory text or summaries — only output the 10 statements in the exact format below.
 - Keep the tone balanced and neutral.
-
 
 Format:
 [Statement]
@@ -57,100 +77,3 @@ Here is the article content to inspire the values:
 
     except Exception as e:
         return f"❌ Error generating content: {e}"
-
-
-
-# import google.generativeai as genai
-# import os
-# import pandas as pd
-# from dotenv import load_dotenv
-
-# # Load environment variables
-# load_dotenv()
-# api_key = os.getenv("API_KEY")
-
-# # Configure Gemini API
-# genai.configure(api_key=api_key)
-# model = genai.GenerativeModel('gemini-1.5-flash')
-
-# # Load the CSV file
-# df = pd.read_csv("../politician_articles.csv")
-
-# # Combine all article texts into one string
-# combined_text = " ".join(df['article_text'].dropna())
-
-# def generate_politician_statements():
-#     try:
-#         prompt = f"""
-#         Based on the following political article content, generate 10 personality-assessing statements. 
-#         Each statement should be followed by two options, labeled O1 and O2. 
-#         Only one of the two options should reflect the values, beliefs, or ideas found in the content. 
-#         The other option should be a contrasting perspective, but both must be phrased positively to avoid obvious bias. 
-#         Do not include any politician names or specific sources.
-
-#         Format:
-#         [Category]
-#         O1: [Positive Option aligned with article]
-#         O2: [Positive Option NOT aligned with article]
-
-#         Here is the article content to use for inspiration:
-#         \"\"\"
-#         {combined_text[:4000]}
-#         \"\"\"
-
-
-#         """
-#         response = model.generate_content(prompt)
-#         return response.text
-#     except Exception as e:
-#         return str(e)
-
-
-
-# import os
-# import pandas as pd
-# import google.generativeai as genai
-# from dotenv import load_dotenv
-
-# # Load API key from .env
-# load_dotenv()
-# api_key = os.getenv("API_KEY")
-# genai.configure(api_key=api_key)
-
-# # Initialize Gemini model
-# model = genai.GenerativeModel('gemini-1.5-flash')
-
-# # Function to extract text from a CSV file
-# def extract_text_from_csv(csv_path):
-#     try:
-#         df = pd.read_csv(csv_path)
-#         return " ".join(df['article_text'].dropna())
-#     except Exception as e:
-#         print(f"Error reading CSV: {e}")
-#         return ""
-
-# # Main function to generate statements and options
-# def generate_politician_statements(csv_path):
-#     try:
-#         content_text = extract_text_from_csv(csv_path)
-#         content_text = content_text[:4000]  # Truncate to fit prompt limits
-
-#         prompt = (
-#             "Based on the following document content, generate 10 personality-assessing statements. 
-#             Each statement should be followed by two options, labeled O1 and O2. 
-#             Only one of the two options should reflect the values, beliefs, or ideas found in the content. 
-#             The other option should be a contrasting perspective, but both must be phrased positively to avoid obvious bias. 
-#             Do not include any politician names or specific sources.\n\n
-#             Format:\n
-#             Statement 1\n
-#             O1: [Positive Option aligned with article]\n
-#             O2: [Positive Option NOT aligned with article]\n\n
-#             Here is the article content:\n
-#             f"{content_text}"
-#         )
-
-#         response = model.generate_content(prompt)
-#         return response.text
-
-#     except Exception as e:
-#         return f"Error: {e}"

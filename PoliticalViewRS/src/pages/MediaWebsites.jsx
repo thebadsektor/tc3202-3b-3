@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import mainstreamNews from "../data/mainstreamNews";
-import { motion as Motion } from "framer-motion";
 
 const MediaWebsites = () => {
+  const navigate = useNavigate();
+  navigate("/result");
+
+  useEffect(() => {
+    document.title = "Media Resources";
+  }, []);
+
   return (
     <div className="pt-28 px-4 max-w-4xl mx-auto">
       <h1 className="bg-[#003366] p-4 rounded-md text-2xl md:text-3xl font-bold text-center mb-10 text-gray-800 dark:text-white">

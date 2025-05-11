@@ -11,6 +11,8 @@ import PersonalTest from "./pages/PersonalTest";
 import Result from "./pages/Result";
 import MediaWebsites from "./pages/MediaWebsites";
 import CandidateProfile from "./pages/CandidateProfile";
+import ErrorBoundary from "./components/ErrorBoundary";
+import { ResultStatusProvider } from "./components/ResultStatusContext";
 
 import { Routes, Route, useLocation } from "react-router-dom";
 
@@ -48,7 +50,9 @@ function AnimatedRoutes() {
           path="/result"
           element={
             <Layout>
-              <Result />
+              <ErrorBoundary>
+                <Result />
+              </ErrorBoundary>
             </Layout>
           }
         />
@@ -57,6 +61,14 @@ function AnimatedRoutes() {
           element={
             <Layout>
               <MediaWebsites />
+            </Layout>
+          }
+        />
+        <Route
+          path="/candidate-profile"
+          element={
+            <Layout>
+              <CandidateProfile />
             </Layout>
           }
         />

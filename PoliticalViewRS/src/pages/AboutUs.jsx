@@ -15,6 +15,10 @@ const AboutUs = () => {
   const location = useLocation();
 
   useEffect(() => {
+    document.title = "About Us";
+  }, []);
+
+  useEffect(() => {
     if (location.hash) {
       const element = document.getElementById(location.hash.substring(1));
       if (element) {

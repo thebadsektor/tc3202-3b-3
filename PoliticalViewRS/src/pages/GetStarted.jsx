@@ -32,8 +32,6 @@ function GetStarted() {
 
   return (
     <div className="flex flex-col min-h-screen scroll-smooth">
-      <Header setShowModal={setShowModal} />
-
       <section
         id="home"
         className="relative h-screen w-full bg-[#202021] text-white flex items-center justify-center text-center px-4"
