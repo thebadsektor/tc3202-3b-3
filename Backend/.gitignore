@@ -6,3 +6,11 @@
 
 # ignore python cache
 __pycache__/
+
+
+candidates.csv
+politician_articles.csv
+
+modules
+try.py
+app.py

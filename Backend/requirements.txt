@@ -1,5 +1,20 @@
-python-dotenv
+# Python environment variable management
+python-dotenv  
+
+# Google GenAI API client
 google-genai
-flask
-flask-cors
-concurrently
+
+# Flask web framework and related utilities
+flask 
+flask-cors  
+
+# Utilities for running processes concurrently
+concurrently 
+
+# Data manipulation and machine learning
+pandas 
+sklearn 
+numpy 
+
+# MongoDB client for Python
+pymongo 
