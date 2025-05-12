@@ -24,7 +24,9 @@ function AnimatedRoutes() {
           path="/"
           element={
             <Layout>
-              <GetStarted />
+              <ErrorBoundary>
+                <GetStarted />
+              </ErrorBoundary>
             </Layout>
           }
         />
@@ -32,16 +34,10 @@ function AnimatedRoutes() {
           path="/about"
           element={
             <Layout>
-              <AboutUs />
+              <ErrorBoundary>
+                <AboutUs />
+              </ErrorBoundary>
             </Layout>
-          }
-        />
-        <Route
-          path="/political-test"
-          element={
-            <SimpleLayout>
-              <PersonalTest />
-            </SimpleLayout>
           }
         />
         <Route
@@ -55,10 +51,23 @@ function AnimatedRoutes() {
           }
         />
         <Route
+          path="/political-test"
+          element={
+            <SimpleLayout>
+              <ErrorBoundary>
+                <PersonalTest />
+              </ErrorBoundary>
+            </SimpleLayout>
+          }
+        />
+
+        <Route
           path="/news-sites"
           element={
             <Layout>
-              <MediaWebsites />
+              <ErrorBoundary>
+                <MediaWebsites />
+              </ErrorBoundary>
             </Layout>
           }
         />

@@ -78,18 +78,6 @@ const Header = () => {
             </Link>
           </li> */}
         </ul>
-        {/* <Link
-          to={resultExists ? "/result" : "#"}
-          onClick={(e) => {
-            if (!resultExists) {
-              e.preventDefault(); // ❌ stop navigation
-              setShowModal(true); // ✅ open modal
-            }
-          }}
-          className="text-white font-bold bg-[#404040] hover:bg-white hover:text-black transition duration-200 py-2 px-5 rounded-sm hidden md:block cursor-pointer text-center"
-        >
-          {resultExists ? "Your Result" : "Take the Test"}
-        </Link> */}
 
         {/* Take the Test Button (always visible) */}
         {/* <button

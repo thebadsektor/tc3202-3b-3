@@ -17,7 +17,9 @@ const Result = () => {
   const [fetchedAnalysis, setFetchedAnalysis] = useState(false);
   const [similarArticles, setSimilarArticles] = useState([]);
 
-  useEffect(() => (document.title = "Your Result"), []);
+  useEffect(() => {
+    document.title = "Your Result";
+  }, []);
 
   useEffect(() => {
     let lastScrollY = window.pageYOffset;
@@ -155,8 +157,9 @@ const Result = () => {
       }
     };
 
-    fetchSimilarArticles();
-  }, [chatId]);
+    // safer trigger after analysis is fetched
+    if (chatId && fetchedAnalysis) fetchSimilarArticles();
+  }, [chatId, fetchedAnalysis]);
 
   return (
     <main className="min-h-screen bg-[#000] text-white flex flex-col ">

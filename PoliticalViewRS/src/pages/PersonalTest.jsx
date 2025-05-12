@@ -93,6 +93,17 @@ const PersonalTest = () => {
     else setShowNextSet(true);
   };
 
+  const formatTopic = (text) => {
+    if (!text) return "";
+    return text
+      .replace(/^Topic\s*:\s*\[statements about\s*/i, "")
+      .replace(/^\[|\]$/, "")
+
+      .split(" ") // ✅ split words
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" "); // ✅ rejoin words
+  };
+
   const currentQuestion = questions[currentQuestionIndex] || {};
   const { question, options } = currentQuestion;
 
@@ -179,10 +190,7 @@ const PersonalTest = () => {
           currentRound * 3 < politicianStatements.length && (
             <div className="w-full max-w-5xl flex flex-col items-center space-y-8">
               <h5 className="text-lg md:text-2xl font-semibold text-white mb-6 text-justify max-w-[600px]">
-                {politicianStatements[currentRound * 3]
-                  ?.replace(/\*\*/g, "")
-                  .replace(/^\[.*?:\s*/, "")
-                  .trim()}
+                {formatTopic(politicianStatements[currentRound * 3])}
               </h5>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 justify-items-center w-full max-w-2xl mx-auto">
                 {[0, 1].map((offset) => {

@@ -48,12 +48,12 @@ Halimbawa:
 Article A binanggit ang kalusugan, Article B binanggit ang edukasyon.
 
 Output:
-[Statement]
+Topic : [paraa saan ang statement]
 O1: Suportahan ang pagpapalawak ng pampublikong ospital para sa mahihirap.
 O2: Ituon ang pondo ng gobyerno sa pagpapahusay ng kalidad ng pampublikong edukasyon.
 
 Format:
-[Statement]
+Topic : [paraa saan ang statement]
 O1: [Pagpipilian 1]
 O2: [Pagpipilian 2]
 
@@ -84,12 +84,12 @@ Example:
 Article A mentions public health, Article B mentions education.
 
 Output:
-[Statement]
+Topic : [statements about]
 O1: Support expanding public hospitals to serve low-income citizens.
 O2: Focus government resources on improving public school quality.
 
 Output format:
-[Statement]
+Topic : [statements about]
 O1: [Option 1]
 O2: [Option 2]
 
