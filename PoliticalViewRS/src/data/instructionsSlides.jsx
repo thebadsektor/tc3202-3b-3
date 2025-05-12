@@ -1,9 +1,9 @@
-import one from "../assets/InstructionPicss/1.png";
-import two from "../assets/InstructionPicss/2.png";
-import three from "../assets/InstructionPicss/3.png";
-import four from "../assets/InstructionPicss/4.png";
-import five from "../assets/InstructionPicss/5.png";
-import six from "../assets/InstructionPicss/6.png";
+import one from "../assets/InstructionPics/1.png";
+import two from "../assets/InstructionPics/2.png";
+import three from "../assets/InstructionPics/3.png";
+import four from "../assets/InstructionPics/4.png";
+import five from "../assets/InstructionPics/5.png";
+import six from "../assets/InstructionPics/6.png";
 const slides = [
   {
     image: one,
