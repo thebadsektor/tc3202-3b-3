@@ -26,8 +26,6 @@ dist-ssr
 *.sw? 
 
 # Public directory
-public
-data
 Developers
 
 # Node modules in parent directory

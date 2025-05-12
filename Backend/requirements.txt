@@ -18,3 +18,8 @@ numpy
 
 # MongoDB client for Python
 pymongo 
+
+
+npm install uuid
+npm install framer-motion
+python -m pip install chardet
