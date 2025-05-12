@@ -18,30 +18,34 @@ function AnimatedRoutes() {
   const location = useLocation();
 
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence mode='wait'>
       <Routes location={location} key={location.pathname}>
         <Route
-          path="/"
+          path='/'
           element={
             <Layout>
-              <ErrorBoundary>
-                <GetStarted />
-              </ErrorBoundary>
+              <GetStarted />
             </Layout>
           }
         />
         <Route
-          path="/about"
+          path='/about'
           element={
             <Layout>
-              <ErrorBoundary>
-                <AboutUs />
-              </ErrorBoundary>
+              <AboutUs />
             </Layout>
           }
         />
         <Route
-          path="/result"
+          path='/political-test'
+          element={
+            <SimpleLayout>
+              <PersonalTest />
+            </SimpleLayout>
+          }
+        />
+        <Route
+          path='/result'
           element={
             <Layout>
               <ErrorBoundary>
@@ -51,27 +55,14 @@ function AnimatedRoutes() {
           }
         />
         <Route
-          path="/political-test"
-          element={
-            <SimpleLayout>
-              <ErrorBoundary>
-                <PersonalTest />
-              </ErrorBoundary>
-            </SimpleLayout>
-          }
-        />
-
-        <Route
-          path="/news-sites"
+          path='/news-sites'
           element={
             <Layout>
-              <ErrorBoundary>
-                <MediaWebsites />
-              </ErrorBoundary>
+              <MediaWebsites />
             </Layout>
           }
         />
-        <Route path="/candidate/:slug" element={<CandidateProfile />} />
+        <Route path='/candidate/:slug' element={<CandidateProfile />} />
       </Routes>
     </AnimatePresence>
   );

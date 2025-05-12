@@ -1,1 +1,63 @@
 @import "tailwindcss";
+@keyframes rgbScroll {
+  0% {
+    background-color: red;
+  }
+  14.28% {
+    background-color: orange;
+  }
+  28.57% {
+    background-color: yellow;
+  }
+  42.85% {
+    background-color: rgb(0, 255, 0);
+  }
+  57.14% {
+    background-color: rgb(0, 187, 255);
+  }
+  71.42% {
+    background-color: rgb(179, 73, 255);
+  }
+  85.71% {
+    background-color: rgb(253, 97, 253);
+  }
+  100% {
+    background-color: red;
+  }
+}
+
+.rgb-animate {
+  animation: rgbScroll 10s linear infinite;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #202021;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00f7ff;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00f7ff;
+}
+
+scrollbar {
+  width: 15px;
+}
+
+scrollbar-track {
+  background: #202021;
+}
+
+scrollbar-thumb {
+  background-color: #00c3ca;
+}
+
+scrollbar-thumb:hover {
+  background-color: #00f7ff;
+}

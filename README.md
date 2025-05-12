@@ -1,6 +1,6 @@
 # TC-3202 Political View Recommendation System
 
-![Project Banner](https://via.placeholder.com/1200x400.png?text=Project+Banner+Placeholder)
+![Municipal Icon](PoliticalViewRS/src/assets/Municipal%20icon.png)
 
 ## Table of Contents
 
@@ -48,44 +48,62 @@ List the main features of the project:
 - Feature 3: Brief description.
 
 ## Technologies Used
-Mention the tools, frameworks, and technologies used in the project:
-- Programming Languages: [e.g., Python, JavaScript, etc.]
-- Frameworks/Libraries: [e.g., React, Flask, etc.]
-- Databases: [e.g., MySQL, MongoDB, etc.]
+
+- Programming Languages: Python, JavaScript
+- Frameworks/Libraries: React, Flask
+- Databases: MongoDB
 - Other Tools: Git
 
 ## Setup and Installation
 
 Step-by-step instructions for setting up the project locally.
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/thebadsektor/tc3202-3b-3.git
-   ```
-2. **Install dependencies:**
-   - If using `npm`:
-   ```bash
-   git clone https://github.com/thebadsektor/tc3202-3b-3.git
-   ```
-   - If using `pip` (for Python projects):
-   ```bash
-   git clone https://github.com/your-repo-url.git
-   ```
-3. **Configure environment variables (if any)**: Provide instructions for setting up .env files or any other required configurations.
-   ```bash
-   git clone https://github.com/thebadsektor/tc3202-3b-3.git
-   ```
-4. **Run the project:**
-   - For web projects:
-   ```bash
-   npm run dev
-   ```
-   - For backend services:
-   ```bash
-   python server.py
-   ```
+1.  **Clone the repository:**
 
-**Note:** If your project has external depencies like XAMPP, MySQL, special SDK, or other environemnt setup, create another section for it.
+```bash
+git clone https://github.com/thebadsektor/tc3202-3b-3.git
+```
+
+2.  **Install dependencies:**
+
+- If using `npm`:
+
+```bash
+cd PoliticalViewRS/
+npm install
+```
+
+- If using `pip` (for Python projects):
+
+```bash
+cd Backend
+python -m venv .venv
+source .venv/Scripts/activate
+pip install -r requirements.txt
+```
+
+3.  **Configure environment variables (if any)**:
+
+```bash
+source .venv/Scripts/activate
+```
+
+4.  **Run the project:**
+
+- For web projects:
+
+```bash
+cd PoliticalViewRS/
+npm run dev
+```
+
+- For backend services:
+
+```bash
+cd Backend/
+source .venv/Scripts/activate
+python server.py
+```
 
 ## Usage Instructions
 
@@ -104,32 +122,100 @@ Another Screenshot
 
 ## Project Structure
 
-Explain the structure of the project directory. Example:
-
 ```bash
 .
-├── 📂 src/
-│   ├── 📂 components/
-│   │   ├── <component>
-│   │   ├── <anotherComponent>
-│   │   └── ...
-│   ├── 📂 pages/
-│   └── 📂 utils/
-├── 📂 public/
-├── 📂 tests/
-├── .env.example
+├── 📂 Backend
+│   ├── 📂 Data
+│   │   ├── candidates.csv
+│   │   ├── csv_to_json.py
+│   │   ├── politician_articles.csv
+│   │   └── politicians_matches.json
+│   ├── 📂 GeminiAPI
+│   │   ├── __init__.py
+│   │   ├── candidate_utils.py
+│   │   ├── generatestatement.py
+│   │   ├── get_politician_matches.py
+│   │   ├── politician_comparison.py
+│   │   ├── politician_statements.py
+│   │   ├── politician_values.py
+│   │   └── predict_values.py
+│   ├── 📂 model
+│   │   └── match_candidates.py
+│   ├── 📂 mongodb
+│   │   ├── __init__.py
+│   │   ├── config.py
+│   │   ├── db.py
+│   │   ├── main.py
+│   │   └── politician_recommendation.py
+│   ├── .gitignore
+│   ├── package-lock.json
+│   ├── requirements.txt
+│   └── server.py
+├── 📂 PoliticalViewRS
+│   ├── 📂 public
+│   │   └── candidates.csv
+│   ├── 📂 src
+│   │   ├── 📂 assets
+│   │   │   ├── 📂 Developers
+│   │   │   │   ├── gabot.jpg
+│   │   │   │   ├── gabs.jpg
+│   │   │   │   ├── genesis.jpg
+│   │   │   │   ├── junie.JPG
+│   │   │   │   ├── nicks.jpg
+│   │   │   │   └── nicole.png
+│   │   │   ├── Background.png
+│   │   │   ├── introbg.png
+│   │   │   ├── introbg2.png
+│   │   │   ├── Municipal icon.png
+│   │   │   └── react.svg
+│   │   ├── 📂 components
+│   │   │   ├── CandidatesResult.jsx
+│   │   │   ├── Card.jsx
+│   │   │   ├── DeveloperCard.jsx
+│   │   │   ├── ErrorBoundary.jsx
+│   │   │   ├── Footer.jsx
+│   │   │   ├── Header.jsx
+│   │   │   ├── Layout.jsx
+│   │   │   ├── PoliticalTestModal.jsx
+│   │   │   ├── ResultStatusContext.jsx
+│   │   │   └── SimpleLayout.jsx
+│   │   ├── 📂 data
+│   │   │   ├── aboutDevelopers.jsx
+│   │   │   └── mainstreamNews.jsx
+│   │   ├── 📂 pages
+│   │   │   ├── AboutUs.jsx
+│   │   │   ├── CandidateProfile.jsx
+│   │   │   ├── GetStarted.jsx
+│   │   │   ├── MediaWebsites.jsx
+│   │   │   ├── PersonalTest.jsx
+│   │   │   └── Result.jsx
+│   │   ├── App.css
+│   │   ├── App.jsx
+│   │   ├── index.css
+│   │   └── main.jsx
+│   ├── .gitignore
+│   ├── eslint.config.js
+│   ├── index.css
+│   ├── index.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── tailwind.config.js
+│   └── vite.config.js
+├── package-lock.json
 ├── package.json
 └── README.md
 ```
 
 ## Contributors
-- **Antopina, Junie**: Lead Developer, Backend Developer
-- **Delos Reyes, Genesis**: Backend Developer
+
+- **Antopina, Junie**: Lead Developer & Back-End Developer
+- **Delos Reyes, Genesis**: Front-End Developer
 - **Dolorico, Nicole**: Documentation
 - **Gabot, Angelo**: Full Stack Developer
 - **Gerald Villaran**: Course Instructor
 
 ## Project Timeline
+
 - **Week 1-2**: Research and project planning.
 - **Week 3-5**: Design and setup.
 - **Week 6-10**: Implementation.
@@ -157,10 +243,8 @@ Explain the structure of the project directory. Example:
 
 ## Acknowledgments
 
-Acknowledge any resources, mentors, or external tools that helped in completing the project.
-
-This project was built from [Original Project Name](https://github.com/username/original-repo), created by [Original Author's Name]. You can view the original repository [here](https://github.com/username/original-repo).
+This project was made possible thanks to the help of our professors. Mr. Gerald Villaran for his expertise in Machine Learning, Ms. Mary Grace Guillermo for her insights on documentation and Ms. Joville Avila for her support in UI/UX design. Their contributions and feedback played a crucial role in shaping this system into what it is today.
 
 ## License
 
-Specify the project's license. For starters, adapt the license of the original repository.
+This project is licensed under the MIT License.
