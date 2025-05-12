@@ -26,85 +26,91 @@ def predict_values_based_on_answers(answers, politician_answers, age, gender, ch
         formatted_answers = "\n".join([f"Answer {i+1}: {a}" for i, a in enumerate(answers)])
         formatted_politicians = "\n".join([f"Politician Answer {i+1}: {a}" for i, a in enumerate(politician_answers)])
 
+        generation_config = {"temperature": 0.4}  # ✅ lower randomness
+
         if language.lower() == "tagalog":
             prompt = f"""Batay sa mga sumusunod na impormasyon, tukuyin at i-score ang mga pangunahing pinahahalagahan o paniniwala ng tao.
 
-Ibigay ang impormasyon sa ibaba bilang batayan:
 Edad: {age}
 Kasarian: {gender}
 
 Mga sagot sa personal test:
 {formatted_answers}
 
-Mga piniling pananaw mula sa mga pahayag ng mga politiko:
+Mga piniling pananaw ng politiko:
 {formatted_politicians}
 
 Mga tagubilin:
-- Pumili ng anumang mga values na makabuluhan (hindi limitado sa isang partikular na listahan).
+- Pumili ng anumang mga values na makabuluhan (hindi limitado sa listahan).
 - Para sa bawat value:
-  - Magbigay ng score mula 1 (pinakamababa) hanggang 5 (pinakamataas).
-  - Ang reason ay dapat malinaw na konektado sa pangalan ng value.
-- Sa dulo, magbigay ng **overall_summary** na maikling naglalarawan ng kabuuang pananaw ng user (1-5 pangungusap lang).
+  - Magbigay ng score mula 1 hanggang 5.
+  - Magbigay ng simpleng paliwanag kung bakit ito tumutugma.
+  - Huwag banggitin o i-reference ang number ng sagot o politician answer.
+- Gumamit ng simpleng Tagalog na madaling maintindihan.
 
-Ibalik lamang ang isang wastong JSON sa ganitong format:
+Magbigay rin ng **overall_summary** para ilarawan ang estilo ng pananaw ng user sa 1-3 maikling pangungusap.
+
+Ibalik lamang ang JSON:
 {{
-  "overall_summary": "buod dito.",
+  "overall_summary": "summary dito",
   "values": [
     {{
       "name": "PangalanNgValue",
       "score": 4,
-      "reason": "Paliwanag sa value name."
+      "reason": "Simpleng paliwanag kung bakit ito tumutugma."
     }}
   ]
 }}
 """
         else:
-            prompt = f"""Based on the following combined user information, predict the person's core political values and beliefs.
+            prompt = f"""Based on the following user profile and choices, predict the person's core political values and beliefs.
 
-Information to consider:
+User Profile:
 Age: {age}
 Gender: {gender}
 
-Answers to personality test questions:
+Personality Test Answers:
 {formatted_answers}
 
-Selected politician answers during test:
+Selected Politician Statements:
 {formatted_politicians}
 
 Instructions:
-- You can choose any values you find meaningful (not limited to a specific list).
+- You may choose any meaningful political values (not limited to a list).
 - For each value:
   - Give a score from 1 (very low) to 5 (very strong).
-  - The reason must clearly relate to the specific value name.
-- At the end, provide an **overall_summary** that explains the user’s political outlook in 1-5 short sentences.
+  - Explain why this value fits the person.
+  - Do NOT mention or reference any answer number or politician answer number.
+  - Write the explanation in a very simple sentence so ordinary people can understand.
+
+At the end, provide an **overall_summary** that explains the person’s general political style in 1-3 very short sentences.
 
 Return only a valid JSON:
 {{
-  "overall_summary": "summary sentence here. make it long",
+  "overall_summary": "short summary here",
   "values": [
     {{
       "name": "ValueName",
       "score": 4,
-      "reason": "Explain the ValueName."
+      "reason": "Simple explanation why this value fits."
     }}
   ]
 }}
 """
 
-        response = model.generate_content(prompt)
+        response = model.generate_content(prompt, generation_config=generation_config)
         raw_text = response.text.strip()
 
         # Clean markdown if present
         cleaned = re.sub(r"^```(?:json)?|```$", "", raw_text, flags=re.IGNORECASE).strip()
 
-        # Attempt to parse full response
         try:
             values = json.loads(cleaned)
         except json.JSONDecodeError as err:
             print("❌ JSON decode error:", err)
             return {"error": "Invalid JSON format", "raw_output": cleaned}
 
-        # Save result
+        # ✅ Save to MongoDB
         record = {
             "chatId": chat_id,
             "answers": answers,

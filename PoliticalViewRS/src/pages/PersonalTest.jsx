@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Card from "../components/Card";
 import { AgeSet, GenderSet } from "../components/AgeGenderSet";
 import { v4 as uuidv4 } from "uuid";
+import InstructionsModal from "../components/HowToUse";
 
 const PersonalTest = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -19,6 +20,7 @@ const PersonalTest = () => {
   const [loadingPoliticianStatements, setLoadingPoliticianStatements] =
     useState(false);
   const [ageAnswer, setAgeAnswer] = useState(null);
+  const [showInstructions, setShowInstructions] = useState(false);
 
   const navigate = useNavigate();
 
@@ -109,6 +111,20 @@ const PersonalTest = () => {
         className="absolute inset-0 w-full h-full object-cover blur-md"
       />
       <div className="absolute inset-0 bg-black/85"></div>
+
+      {/*Help button top-left */}
+      <button
+        onClick={() => setShowInstructions(true)}
+        className="fixed top-8 right-8 z-50  text-[#fff] text-4xl font-semibold sm:text-sm hover:underline hover:text-[#F5F5DC] transition"
+      >
+        How to take the test?
+      </button>
+
+      {/*Modal */}
+      <InstructionsModal
+        show={showInstructions}
+        onClose={() => setShowInstructions(false)}
+      />
 
       <div className="relative z-10">
         {!showNextSet &&

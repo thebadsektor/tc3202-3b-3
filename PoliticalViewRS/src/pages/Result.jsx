@@ -201,12 +201,14 @@ const Result = () => {
 
                   return (
                     <li key={index} className="flex flex-col space-y-2">
-                      <div className="relative group font-semibold capitalize cursor-pointer w-fit">
+                      {/* ✅ Hover ONLY on text */}
+                      <span className="relative group font-semibold capitalize cursor-pointer">
                         {name}
-                        <div className="absolute -top-20 left-1/2 -translate-x-1/2 px-3 py-2 text-xs bg-black text-white rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-normal w-64 z-20 text-center">
+                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 text-xs bg-black text-white rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-normal z-20 text-center">
                           {reason}
                         </div>
-                      </div>
+                      </span>
+
                       <div className="flex items-center space-x-4">
                         <div className="relative h-1 bg-gray-700 rounded-full flex-1">
                           <div

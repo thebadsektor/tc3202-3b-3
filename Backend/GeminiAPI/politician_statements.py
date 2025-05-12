@@ -27,19 +27,30 @@ def load_articles_by_candidate(path):
         return pd.DataFrame()
 
 def generate_statement_from_two_articles(article_a, article_b, language='english'):
-    article_a = article_a[:2000]  # Safety limit
+    article_a = article_a[:2000]
     article_b = article_b[:2000]
+
+    generation_config = {"temperature": 0.4}  # ✅ recommended lower temperature
 
     if language.lower() == 'tagalog':
         prompt = f"""
 Ikaw ay isang AI political psychologist. Narito ang dalawang artikulo mula sa magkaibang kandidato.
 
 Gumawa ng **10 tanong** para sa personality test.
-- Para sa bawat tanong magbigay ng dalawang pagpipilian (O1 at O2).
-- Gamitin ang dalawang artikulo bilang inspirasyon ngunit dapat maging pangkalahatang ideya lamang.
+- Para sa bawat tanong, gumawa ng isang statement at dalawang pagpipilian (O1 at O2).
+- Lahat ng statement at pagpipilian ay dapat manggaling lamang sa mga ideya, paniniwala, o patakaran na binanggit sa mga artikulo.
+- Huwag mag-imbento ng mga bagong paksa o ideya.
 - Ang parehong pagpipilian ay dapat **parehong positibo** o **parehong negatibo** (hindi halo).
 - Huwag banggitin ang pangalan ng kandidato o source.
 - Gumamit ng simpleng Tagalog.
+
+Halimbawa:
+Article A binanggit ang kalusugan, Article B binanggit ang edukasyon.
+
+Output:
+[Statement]
+O1: Suportahan ang pagpapalawak ng pampublikong ospital para sa mahihirap.
+O2: Ituon ang pondo ng gobyerno sa pagpapahusay ng kalidad ng pampublikong edukasyon.
 
 Format:
 [Statement]
@@ -60,13 +71,22 @@ Kandidato B article:
         prompt = f"""
 You are an AI political psychologist. You are given article content from 2 different political candidates.
 
-Task:
+Your task:
 - Write **10 personality-assessing statements** about political values or beliefs.
-- For each statement provide 2 answer options (O1 and O2).
-- Use both articles as inspiration, but write options as general political ideas.
-- Both options must be either both positive OR both negative (never mixed).
-- Do NOT mention any politician, candidate, or article source.
-- Use very simple, easy English (assume the reader has low political knowledge).
+- Each statement must present one question and two answer options (O1 and O2).
+- The statements and options must ONLY use ideas, beliefs, or policies explicitly mentioned in either article.
+- Do not invent unrelated ideas.
+- Both answer options must be either both positive OR both negative (never mixed).
+- Do NOT mention any candidate name or article source.
+- Use very simple, easy English (assume low political knowledge).
+
+Example:
+Article A mentions public health, Article B mentions education.
+
+Output:
+[Statement]
+O1: Support expanding public hospitals to serve low-income citizens.
+O2: Focus government resources on improving public school quality.
 
 Output format:
 [Statement]
@@ -84,8 +104,9 @@ Candidate B article:
 \"\"\"
 """
 
-    response = model.generate_content(prompt)
+    response = model.generate_content(prompt, generation_config=generation_config)
     return response.text.strip()
+
 
 def generate_politician_statements(language='english'):
     df_candidates = load_articles_by_candidate(csv_path)

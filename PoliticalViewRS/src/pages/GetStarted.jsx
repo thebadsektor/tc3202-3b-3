@@ -5,6 +5,7 @@ import bgImage from "../assets/introbg.png";
 import PoliticalTestModal from "../components/PoliticalTestModal";
 import mainstreamNews from "../data/mainstreamNews";
 import PoliticianCard from "../components/PoliticianCard";
+import InstructionsModal from "../components/HowToUse";
 
 function GetStarted() {
   const [showModal, setShowModal] = useState(false);
