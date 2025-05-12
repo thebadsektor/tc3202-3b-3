@@ -67,13 +67,15 @@ const AboutUs = () => {
             {index % 2 === 0 ? (
               <>
                 <div className="md:w-1/2 text-center md:text-left mb-8 md:mb-0">
-                  <h2 className="text-3xl md:text-4xl font-bold mb-2">
+                  <h2 className="text-xl md:text-5xl font-bold mb-2">
                     {dev.name}
                   </h2>
                   <h3 className="text-xl md:text-2xl text-gray-400 mb-6">
                     {dev.position}
                   </h3>
-                  <p className="text-gray-300">{dev.details}</p>
+                  <p className="md:text-2xl text-justify text-gray-300">
+                    {dev.details}
+                  </p>
                 </div>
                 <div className="md:w-1/3 w-full">
                   <img
@@ -93,13 +95,15 @@ const AboutUs = () => {
                   />
                 </div>
                 <div className="md:w-1/2 text-center md:text-left">
-                  <h2 className="text-3xl md:text-4xl font-bold mb-2">
+                  <h2 className="text-3xl md:text-5xl font-bold mb-2">
                     {dev.name}
                   </h2>
                   <h3 className="text-xl md:text-2xl text-gray-400 mb-6">
                     {dev.position}
                   </h3>
-                  <p className="text-gray-300">{dev.details}</p>
+                  <p className="md:text-2xl text-justify text-gray-300">
+                    {dev.details}
+                  </p>
                 </div>
               </>
             )}
