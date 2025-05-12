@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import random
 import google.generativeai as genai
 from dotenv import load_dotenv
 
@@ -11,69 +12,102 @@ genai.configure(api_key=api_key)
 # Initialize Gemini model
 model = genai.GenerativeModel('gemini-1.5-flash')
 
-# Safely build path to CSV regardless of working directory
+# Path to CSV
 base_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(base_dir, "..", "data")
 csv_path = os.path.join(data_dir, "politician_articles.csv")
 
-def extract_text_from_csv(path):
+def load_articles_by_candidate(path):
     try:
         df = pd.read_csv(path)
-        return " ".join(df['article_text'].dropna())
+        grouped = df.groupby('candidate_name')['article_text'].apply(lambda texts: " ".join(texts.dropna())).reset_index()
+        return grouped
     except Exception as e:
         print(f"❌ Error reading CSV: {e}")
-        return ""
+        return pd.DataFrame()
 
-def generate_politician_statements(language='english'):
-    try:
-        content_text = extract_text_from_csv(csv_path)
-        content_text = content_text[:4000]  # Truncate for Gemini prompt limit
+def generate_statement_from_two_articles(article_a, article_b, language='english'):
+    article_a = article_a[:2000]  # Safety limit
+    article_b = article_b[:2000]
 
-        if language.lower() == 'tagalog':
-            prompt = f"""
-Ikaw ay isang AI political psychologist. Batay sa mga sumusunod na nilalaman ng mga artikulo, bumuo ng 10 personality-assessing statements.
+    if language.lower() == 'tagalog':
+        prompt = f"""
+Ikaw ay isang AI political psychologist. Narito ang dalawang artikulo mula sa magkaibang kandidato.
 
-Ang bawat statement ay dapat magbigay ng isang tanong na sinusundan ng dalawang pagpipilian na may label na O1 at O2:
-- Isa lamang ang dapat tumugma sa mga pinahahalagahan, paniniwala, o ideya sa artikulo.
-- Ang isa naman ay dapat magbigay ng kabaligtarang pananaw ngunit parehong positibo ang tono.
-- Huwag gumamit ng malalim o teknikal na Tagalog. Gumamit lamang ng simpleng Tagalog na madaling maintindihan ng karaniwang Pilipino.
-- Huwag maglagay ng pangalan ng politiko o reference ng source.
-- Huwag maglagay ng introduction o summary — ibigay lamang ang 10 statements sa eksaktong format.
-
-Format ng output:
-[Statement]
-O1: [Tugma sa article]
-O2: [Kabaligtaran ngunit positibo]
-
-Narito ang nilalaman ng artikulo para gamitin bilang inspirasyon:
-\"\"\"
-{content_text}
-\"\"\"
-"""
-        else:
-            prompt = f"""
-You are an AI political psychologist. Based on the following political article content, generate 10 personality-assessing statements.
-
-Each statement should present a topic followed by two answer choices labeled O1 and O2:
-- Only one option should reflect the values, beliefs, or ideals found in the article.
-- The other option should offer a contrasting but still positively phrased perspective.
-- Do not include any politician names or source references.
-- Do not add introductory text or summaries — only output the 10 statements in the exact format below.
-- Keep the tone balanced and neutral.
+Gumawa ng **10 tanong** para sa personality test.
+- Para sa bawat tanong magbigay ng dalawang pagpipilian (O1 at O2).
+- Gamitin ang dalawang artikulo bilang inspirasyon ngunit dapat maging pangkalahatang ideya lamang.
+- Ang parehong pagpipilian ay dapat **parehong positibo** o **parehong negatibo** (hindi halo).
+- Huwag banggitin ang pangalan ng kandidato o source.
+- Gumamit ng simpleng Tagalog.
 
 Format:
 [Statement]
-O1: [Aligned with article]
-O2: [Contrasting but positive]
+O1: [Pagpipilian 1]
+O2: [Pagpipilian 2]
 
-Here is the article content to inspire the values:
+Kandidato A article:
+\"\"\"  
+{article_a}  
 \"\"\"
-{content_text}
+
+Kandidato B article:
+\"\"\"  
+{article_b}  
+\"\"\"
+"""
+    else:
+        prompt = f"""
+You are an AI political psychologist. You are given article content from 2 different political candidates.
+
+Task:
+- Write **10 personality-assessing statements** about political values or beliefs.
+- For each statement provide 2 answer options (O1 and O2).
+- Use both articles as inspiration, but write options as general political ideas.
+- Both options must be either both positive OR both negative (never mixed).
+- Do NOT mention any politician, candidate, or article source.
+- Use very simple, easy English (assume the reader has low political knowledge).
+
+Output format:
+[Statement]
+O1: [Option 1]
+O2: [Option 2]
+
+Candidate A article:
+\"\"\"  
+{article_a}  
+\"\"\"
+
+Candidate B article:
+\"\"\"  
+{article_b}  
 \"\"\"
 """
 
-        response = model.generate_content(prompt)
-        return response.text
+    response = model.generate_content(prompt)
+    return response.text.strip()
 
-    except Exception as e:
-        return f"❌ Error generating content: {e}"
+def generate_politician_statements(language='english'):
+    df_candidates = load_articles_by_candidate(csv_path)
+    if len(df_candidates) < 2:
+        raise Exception("Not enough candidates to create pairs.")
+
+    candidates_list = df_candidates.sample(frac=1).reset_index(drop=True)
+    candidate_a = candidates_list.iloc[0]
+    candidate_b = candidates_list.iloc[1]
+    article_a = candidate_a['article_text']
+    article_b = candidate_b['article_text']
+
+    return generate_statement_from_two_articles(article_a, article_b, language=language)
+
+if __name__ == "__main__":
+    df_candidates = load_articles_by_candidate(csv_path)
+    if len(df_candidates) < 2:
+        print("❌ Not enough candidates to create pairs.")
+    else:
+        candidate_a = df_candidates.iloc[0]
+        candidate_b = df_candidates.iloc[1]
+        article_a = candidate_a['article_text']
+        article_b = candidate_b['article_text']
+        statement = generate_statement_from_two_articles(article_a, article_b, language='english')
+        print(statement)

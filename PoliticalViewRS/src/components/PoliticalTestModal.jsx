@@ -12,6 +12,7 @@ const PoliticalTestModal = ({ show, onClose }) => {
       alert("Please select a language before starting the test.");
       return;
     }
+    console.log("Saving language:", language);
     localStorage.setItem("selectedLanguage", language);
     navigate("/political-test");
   };

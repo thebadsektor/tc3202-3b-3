@@ -1,18 +1,36 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Papa from "papaparse";
 import bgImage from "../assets/introbg.png";
-import Header from "../components/Header";
 import PoliticalTestModal from "../components/PoliticalTestModal";
 import mainstreamNews from "../data/mainstreamNews";
-import { motion as Motion } from "framer-motion";
+import PoliticianCard from "../components/PoliticianCard";
 
 function GetStarted() {
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+  const [candidates, setCandidates] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 14; // You can change to 6, 8 etc.
 
   const handleGetStarted = () => {
     setShowModal(true);
   };
+
+  useEffect(() => {
+    fetch("/candidates.csv")
+      .then((response) => response.text())
+      .then((csvText) => {
+        Papa.parse(csvText, {
+          header: true,
+          skipEmptyLines: true,
+          encoding: "utf-8", // or latin1 if your file is latin
+          complete: (results) => {
+            setCandidates(results.data);
+          },
+        });
+      });
+  }, []);
 
   useEffect(() => {
     document.title = "Home";
@@ -29,6 +47,47 @@ function GetStarted() {
 
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    fetch("/candidates.csv")
+      .then((response) => response.text())
+      .then((csvText) => {
+        Papa.parse(csvText, {
+          header: true,
+          skipEmptyLines: true,
+          encoding: "utf-8", // or 'latin1' if needed
+          complete: (results) => {
+            setCandidates(results.data);
+          },
+        });
+      });
+  }, []);
+
+  // Pagination logic
+  const indexOfLast = currentPage * itemsPerPage;
+  const indexOfFirst = indexOfLast - itemsPerPage;
+  const currentCandidates = candidates.slice(indexOfFirst, indexOfLast);
+
+  const totalPages = Math.ceil(candidates.length / itemsPerPage);
+
+  const handlePrev = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  const handleCardClick = (candidate) => {
+    const candidateNickname = candidate.nickname;
+    if (!candidateNickname) return;
+
+    const slug = candidateNickname.toLowerCase().replace(/\s+/g, "-");
+    window.open(
+      `/candidate/${slug}?name=${encodeURIComponent(candidateNickname)}`,
+      "_blank"
+    );
+  };
 
   return (
     <div className="flex flex-col min-h-screen scroll-smooth">
@@ -69,7 +128,57 @@ function GetStarted() {
         onClose={() => setShowModal(false)}
       />
 
-      <section className="bg-[#000] h-screen px-8 flex flex-col lg:flex-row items-center justify-center gap-12 transition-all duration-1000 ease-in-out">
+      <section className="bg-[#212121] min-h-screen flex items-center justify-center px-4 py-10">
+        <div className="bg-[#2A2A2A] text-white p-8  rounded-xl shadow-xl w-full max-w-3xl min-h-[75vh]">
+          <h2 className="text-4xl text-[#fff] font-semibold mb-8 text-center">
+            Candidates for Senator
+          </h2>
+
+          <div className="max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              {currentCandidates
+                .slice()
+                .sort((a, b) => {
+                  const nameA = (a.nickname || "").toLowerCase();
+                  const nameB = (b.nickname || "").toLowerCase();
+                  return nameA.localeCompare(nameB);
+                })
+                .map((candidate, index) => (
+                  <PoliticianCard
+                    key={index}
+                    candidate={candidate}
+                    onCardClick={handleCardClick}
+                  />
+                ))}
+            </div>
+          </div>
+
+          {/* Pagination Controls */}
+          <div className="flex items-center justify-center mt-10 space-x-4">
+            <button
+              onClick={handlePrev}
+              disabled={currentPage === 1}
+              className="bg-gray-700 hover:bg-[#918484] hover:text-[#000] px-4 py-2 w-28 text-center rounded disabled:opacity-50"
+            >
+              Previous
+            </button>
+
+            <span className="text-lg font-semibold">
+              Page {currentPage} of {totalPages}
+            </span>
+
+            <button
+              onClick={handleNext}
+              disabled={currentPage === totalPages}
+              className="bg-gray-700 hover:bg-[#918484] hover:text-[#000] px-4 py-2 w-28 text-center rounded disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#000] py-24 px-8 flex flex-col lg:flex-row items-center justify-center gap-12 transition-all duration-1000 ease-in-out">
         {/* Left Block */}
         <div className="max-w-md text-center lg:text-left">
           <h2 className="text-4xl font-extrabold text-gray-200 mb-4">

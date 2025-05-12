@@ -64,14 +64,6 @@ function AnimatedRoutes() {
             </Layout>
           }
         />
-        <Route
-          path="/candidate-profile"
-          element={
-            <Layout>
-              <CandidateProfile />
-            </Layout>
-          }
-        />
         <Route path="/candidate/:slug" element={<CandidateProfile />} />
       </Routes>
     </AnimatePresence>
