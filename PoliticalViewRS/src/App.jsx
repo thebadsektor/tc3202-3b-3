@@ -2,7 +2,6 @@ import "./App.css";
 import { BrowserRouter as Router } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 
-// ✅ All page and layout imports
 import Layout from "./components/Layout";
 import SimpleLayout from "./components/SimpleLayout";
 import GetStarted from "./pages/GetStarted";
@@ -12,7 +11,6 @@ import Result from "./pages/Result";
 import MediaWebsites from "./pages/MediaWebsites";
 import CandidateProfile from "./pages/CandidateProfile";
 import ErrorBoundary from "./components/ErrorBoundary";
-import { ResultStatusProvider } from "./components/ResultStatusContext";
 
 import { Routes, Route, useLocation } from "react-router-dom";
 
@@ -26,7 +24,9 @@ function AnimatedRoutes() {
           path="/"
           element={
             <Layout>
-              <GetStarted />
+              <ErrorBoundary>
+                <GetStarted />
+              </ErrorBoundary>
             </Layout>
           }
         />
@@ -34,16 +34,10 @@ function AnimatedRoutes() {
           path="/about"
           element={
             <Layout>
-              <AboutUs />
+              <ErrorBoundary>
+                <AboutUs />
+              </ErrorBoundary>
             </Layout>
-          }
-        />
-        <Route
-          path="/political-test"
-          element={
-            <SimpleLayout>
-              <PersonalTest />
-            </SimpleLayout>
           }
         />
         <Route
@@ -57,18 +51,23 @@ function AnimatedRoutes() {
           }
         />
         <Route
+          path="/political-test"
+          element={
+            <SimpleLayout>
+              <ErrorBoundary>
+                <PersonalTest />
+              </ErrorBoundary>
+            </SimpleLayout>
+          }
+        />
+
+        <Route
           path="/news-sites"
           element={
             <Layout>
-              <MediaWebsites />
-            </Layout>
-          }
-        />
-        <Route
-          path="/candidate-profile"
-          element={
-            <Layout>
-              <CandidateProfile />
+              <ErrorBoundary>
+                <MediaWebsites />
+              </ErrorBoundary>
             </Layout>
           }
         />

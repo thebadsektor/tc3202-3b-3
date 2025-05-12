@@ -1,11 +1,7 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import mainstreamNews from "../data/mainstreamNews";
 
 const MediaWebsites = () => {
-  const navigate = useNavigate();
-  navigate("/result");
-
   useEffect(() => {
     document.title = "Media Resources";
   }, []);

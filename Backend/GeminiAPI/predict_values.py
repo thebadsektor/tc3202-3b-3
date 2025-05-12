@@ -4,7 +4,7 @@ import json
 import re
 from dotenv import load_dotenv
 from datetime import datetime
-from mongodb import db  # Make sure this imports your db connection
+from mongodb import db
 
 # Load environment variables
 load_dotenv()
@@ -14,101 +14,115 @@ api_key = os.getenv("API_KEY")
 genai.configure(api_key=api_key)
 model = genai.GenerativeModel('gemini-1.5-flash')
 
-def predict_values_based_on_answers(answers, chat_id="anonymous", language="english"):
+def predict_values_based_on_answers(answers, politician_answers, age, gender, chat_id="anonymous", language="english"):
     try:
         print(f"🧠 Saving prediction for chatId: {chat_id} with language: {language}")
 
-        # Check if prediction already exists
         existing = db["predicted_user_values"].find_one({"chatId": chat_id})
         if existing:
             print("⚠️ Reusing existing prediction from MongoDB")
             return existing["predicted_values"]
 
         formatted_answers = "\n".join([f"Answer {i+1}: {a}" for i, a in enumerate(answers)])
+        formatted_politicians = "\n".join([f"Politician Answer {i+1}: {a}" for i, a in enumerate(politician_answers)])
 
-        # ✅ Language-based prompt selection
+        generation_config = {"temperature": 0.4}  # ✅ lower randomness
+
         if language.lower() == "tagalog":
-            prompt = f"""Batay sa mga sumusunod na sagot sa mga tanong ng personality test, tukuyin at i-score ang mga pangunahing pinahahalagahan o paniniwala ng tao.
+            prompt = f"""Batay sa mga sumusunod na impormasyon, tukuyin at i-score ang mga pangunahing pinahahalagahan o paniniwala ng tao.
 
-Mga tagubilin:
-- Pumili ng anumang mga pinahahalagahan na makabuluhan (hindi limitado sa isang partikular na listahan).
-- Para sa bawat pinahahalagahan:
-  - Magbigay ng score mula 1 (pinakamababa) hanggang 5 (pinakamataas).
-  - Magdagdag ng **maikli at simpleng Tagalog na paliwanag** kung bakit ito tumutugma. Iwasan ang malalalim o teknikal na salita.
+Edad: {age}
+Kasarian: {gender}
 
-Mga Sagot:
+Mga sagot sa personal test:
 {formatted_answers}
 
-Ibalik lamang ang isang wastong JSON na ganito ang format:
+Mga piniling pananaw ng politiko:
+{formatted_politicians}
 
+Mga tagubilin:
+- Pumili ng anumang mga values na makabuluhan (hindi limitado sa listahan).
+- Para sa bawat value:
+  - Magbigay ng score mula 1 hanggang 5.
+  - Magbigay ng simpleng paliwanag kung bakit ito tumutugma.
+  - Huwag banggitin o i-reference ang number ng sagot o politician answer.
+- Gumamit ng simpleng Tagalog na madaling maintindihan.
+
+Magbigay rin ng **overall_summary** para ilarawan ang estilo ng pananaw ng user sa 1-3 maikling pangungusap.
+
+Ibalik lamang ang JSON:
 {{
+  "overall_summary": "summary dito",
   "values": [
     {{
       "name": "PangalanNgValue",
       "score": 4,
-      "reason": "Maikling paliwanag dito."
+      "reason": "Simpleng paliwanag kung bakit ito tumutugma."
     }}
   ]
 }}
 """
         else:
-            # default = english
-            prompt = f"""Based on the following answers to personality test questions, identify and score the person's most relevant core values or beliefs.
+            prompt = f"""Based on the following user profile and choices, predict the person's core political values and beliefs.
 
-Instructions:
-- You can choose any values you find meaningful (not limited to a specific list).
-- For each value:
-  - Give a score from 1 (very low) to 5 (very strong).
-  - Add a short explanation (1 sentence) in **simple English** explaining why it fits.
+User Profile:
+Age: {age}
+Gender: {gender}
 
-Answers:
+Personality Test Answers:
 {formatted_answers}
 
-Return only a valid JSON with this format:
+Selected Politician Statements:
+{formatted_politicians}
 
+Instructions:
+- You may choose any meaningful political values (not limited to a list).
+- For each value:
+  - Give a score from 1 (very low) to 5 (very strong).
+  - Explain why this value fits the person.
+  - Do NOT mention or reference any answer number or politician answer number.
+  - Write the explanation in a very simple sentence so ordinary people can understand.
+
+At the end, provide an **overall_summary** that explains the person’s general political style in 1-3 very short sentences.
+
+Return only a valid JSON:
 {{
+  "overall_summary": "short summary here",
   "values": [
     {{
       "name": "ValueName",
       "score": 4,
-      "reason": "Short reason here."
+      "reason": "Simple explanation why this value fits."
     }}
   ]
 }}
 """
 
-        # Call Gemini
-        response = model.generate_content(prompt)
+        response = model.generate_content(prompt, generation_config=generation_config)
         raw_text = response.text.strip()
 
-        # Clean response (remove markdown formatting)
+        # Clean markdown if present
         cleaned = re.sub(r"^```(?:json)?|```$", "", raw_text, flags=re.IGNORECASE).strip()
 
-        # Try finding the JSON object inside the response
-        match = re.search(r'{\s*"values"\s*:\s*\[.*?\]\s*}', cleaned, re.DOTALL)
-        if not match:
-            print("❌ Could not extract valid JSON block.")
-            return {"error": "Failed to extract JSON", "raw_output": raw_text}
-
-        json_text = match.group()
-
         try:
-            values = json.loads(json_text)
+            values = json.loads(cleaned)
         except json.JSONDecodeError as err:
             print("❌ JSON decode error:", err)
-            return {"error": "Invalid JSON format", "raw_output": json_text}
+            return {"error": "Invalid JSON format", "raw_output": cleaned}
 
-        # Save to DB
+        # ✅ Save to MongoDB
         record = {
             "chatId": chat_id,
             "answers": answers,
+            "politicianAnswers": politician_answers,
+            "age": age,
+            "gender": gender,
             "predicted_values": values,
             "timestamp": datetime.utcnow()
         }
 
         db["predicted_user_values"].insert_one(record)
-        print("✅ Prediction saved to MongoDB")
-
+        print(f"✅ Prediction saved to MongoDB → chatId: {chat_id}, answers: {len(answers)}, politicians: {len(politician_answers)}")
         return values
 
     except Exception as e:
