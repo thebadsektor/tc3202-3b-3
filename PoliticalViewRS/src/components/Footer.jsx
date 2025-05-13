@@ -14,7 +14,7 @@ function Footer() {
             <li>
               <Link
                 to='/about#developer-junie'
-                className='text-white text-md font-mono hover:bg-cyan-300 hover:font-bold hover:text-black px-2 py-1 rounded'
+                className='text-white text-md hover:bg-cyan-300 hover:font-bold hover:text-black px-2 py-1 rounded'
               >
                 Junie Antopina
               </Link>
@@ -22,7 +22,7 @@ function Footer() {
             <li>
               <Link
                 to='/about#developer-genesis'
-                className='text-white text-md font-mono hover:bg-cyan-300 hover:font-bold hover:text-black px-2 py-1 rounded'
+                className='text-white text-md hover:bg-cyan-300 hover:font-bold hover:text-black px-2 py-1 rounded'
               >
                 Genesis Delos Reyes
               </Link>
@@ -30,7 +30,7 @@ function Footer() {
             <li>
               <Link
                 to='/about#developer-nicole'
-                className='text-white text-md font-mono hover:bg-cyan-300 hover:font-bold hover:text-black px-2 py-1 rounded'
+                className='text-white text-md hover:bg-cyan-300 hover:font-bold hover:text-black px-2 py-1 rounded'
               >
                 Nicole Dolorico
               </Link>
@@ -38,7 +38,7 @@ function Footer() {
             <li>
               <Link
                 to='/about#developer-angelo'
-                className='text-white text-md font-mono hover:bg-cyan-300 hover:font-bold hover:text-black px-2 py-1 rounded '
+                className='text-white text-md hover:bg-cyan-300 hover:font-bold hover:text-black px-2 py-1 rounded '
               >
                 Angelo Gabot
               </Link>
@@ -56,7 +56,7 @@ function Footer() {
                 href={news.sites_url}
                 target='_blank'
                 rel='noopener noreferrer'
-                className='text-white text-md font-mono hover:text-cyan-300 px-2 py-1'
+                className='text-white text-md hover:text-cyan-300 px-2 py-1'
               >
                 {news.name}
               </a>
@@ -67,8 +67,8 @@ function Footer() {
 
       {/* Second Row - Copyright */}
       <div className='flex flex-col items-center'>
-        <div className='cursor-not-allowed text-center text-white text-lg '>
-          © TC 3202 3b Group 3
+        <div className='font-semibold text-center text-white text-lg '>
+          © Political View Recommendation System
         </div>
       </div>
     </footer>

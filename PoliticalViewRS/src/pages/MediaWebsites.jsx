@@ -31,7 +31,7 @@ const MediaWebsites = () => {
 
       <div className='min-h-screen w-full bg-[#303030]'>
         <div className='min-h-screen bg-[#303030] pt-28 pb-1 px-4 max-w-4xl mx-auto'>
-          <h1 className='font-mono p-4 rounded-md text-4xl font-bold text-center mb-10 text-gray-800 dark:text-white'>
+          <h1 className='p-4 rounded-md text-4xl font-bold text-center mb-10 text-white'>
             Philippine Political News & Media Sites
           </h1>
 

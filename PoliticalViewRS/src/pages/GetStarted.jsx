@@ -14,8 +14,9 @@ function GetStarted() {
   const navigate = useNavigate();
   const [candidates, setCandidates] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  // const itemsPerPage = Math.ceil(candidates.length / 9);
-  const itemsPerPage = 6;
+  const [itemsPerPage, setItemsPerPage] = useState(
+    window.innerWidth < 768 ? 5 : 8 // 6 cards for phones, 8 for larger screens
+  );
 
   const handleGetStarted = () => {
     setShowModal(true);
@@ -28,7 +29,7 @@ function GetStarted() {
         Papa.parse(csvText, {
           header: true,
           skipEmptyLines: true,
-          encoding: "utf-8", // or latin1 if your file is latin
+          encoding: "utf-8",
           complete: (results) => {
             setCandidates(results.data);
           },
@@ -65,6 +66,16 @@ function GetStarted() {
           },
         });
       });
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setItemsPerPage(window.innerWidth < 768 ? 6 : 8);
+      setCurrentPage(1); // Reset to the first page on resize
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Pagination logic
@@ -131,14 +142,14 @@ function GetStarted() {
       >
         <div className='flex flex-col items-center gap-8'>
           <div className='p-3 max-w-3xl mx-auto'>
-            <h1 className='font-mono text-5xl font-extrabold text-white mb-4'>
+            <h1 className='text-5xl font-extrabold text-white mb-4'>
               Vote with clarity
               <br />
-              <span className='text-cyan-400 text-4xl'>
+              <span className='text-cyan-400 font-bold text-4xl'>
                 Choose with confidence
               </span>
             </h1>
-            <p className='font-mono text-xl text-white'>
+            <p className='text-xl font-semibold text-white'>
               Our system helps users explore their political values and compare
               them with the positions of various politicians. By analyzing
               personal insights, it delivers tailored candidate recommendations
@@ -147,7 +158,7 @@ function GetStarted() {
           </div>
           <button
             onClick={handleGetStarted}
-            className='text-white !bg-[#303030] hover:!bg-white transform transition-transform duration-200 hover:scale-110 hover:text-black py-4 px-8 text-lg rounded-lg border border-white font-bold'
+            className='text-white !bg-[#303030] hover:!bg-white hover:cursor-pointer transform transition-transform duration-200 hover:scale-110 hover:text-black py-4 px-8 text-lg rounded-lg border border-white font-bold'
           >
             Get Started
           </button>
@@ -159,14 +170,14 @@ function GetStarted() {
         onClose={() => setShowModal(false)}
       />
 
-      <section className='bg-[#212121] h-screen flex items-center justify-center px-4 py-10'>
+      <section className='bg-[#212121] min-h-screen flex items-center justify-center px-4 py-10'>
         <div className='max-w-5xl w-full'>
-          <h2 className='text-5xl text-white font-semibold mb-10 font-mono text-center'>
+          <h2 className='text-3xl sm:text-4xl md:text-5xl text-white font-bold pb-8 text-center'>
             Candidates for Senator
           </h2>
 
-          <div className='max-h-[70vh] flex flex-col'>
-            <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-6'>
+          <div className='h-full flex flex-col'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4'>
               {currentCandidates
                 .slice()
                 .sort((a, b) => {
@@ -182,29 +193,43 @@ function GetStarted() {
                   />
                 ))}
             </div>
-          </div>
 
-          {/* Pagination Controls */}
-          <div className='flex items-center justify-center pt-12 space-x-6'>
-            <button
-              onClick={handlePrev}
-              disabled={currentPage === 1}
-              className='text-2xl font-mono text-white hover:text-cyan-300 w-50 text-center hover:cursor-pointer'
-            >
-              🡄 Previous
-            </button>
+            {/* Pagination Controls */}
+            <div className='flex flex-col items-center justify-center mt-6 space-y-4'>
+              {/* Circle Indicators */}
+              <div className='flex gap-2'>
+                {Array.from({ length: totalPages }).map((_, index) => (
+                  <span
+                    key={index}
+                    onClick={() => setCurrentPage(index + 1)}
+                    className={`h-3 w-3 rounded-full cursor-pointer transition-all duration-300 ${
+                      index + 1 === currentPage
+                        ? "bg-cyan-300 scale-130"
+                        : "bg-gray-500"
+                    }`}
+                  ></span>
+                ))}
+              </div>
 
-            <span className='text-lg font-semibold font-mono text-white'>
-              Page {currentPage} of {totalPages}
-            </span>
+              {/* Next and Previous Buttons */}
+              <div className='flex items-center justify-between w-full max-w-xs sm:max-w-md lg:max-w-lg'>
+                <button
+                  onClick={handlePrev}
+                  disabled={currentPage === 1}
+                  className='flex-1 text-lg sm:text-2xl font-semibold text-white hover:text-cyan-300 py-2 px-4 text-center hover:cursor-pointer disabled:opacity-50'
+                >
+                  <span className='mr-2 sm:mr-4'>🡄</span>Previous
+                </button>
 
-            <button
-              onClick={handleNext}
-              disabled={currentPage === totalPages}
-              className='text-2xl font-mono text-white hover:text-cyan-300 w-40 text-center hover:cursor-pointer'
-            >
-              Next 🡆
-            </button>
+                <button
+                  onClick={handleNext}
+                  disabled={currentPage === totalPages}
+                  className='flex-1 text-lg sm:text-2xl font-semibold text-white hover:text-cyan-300 py-2 px-4 text-center hover:cursor-pointer disabled:opacity-50'
+                >
+                  Next<span className='ml-2 sm:ml-4'>🡆</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -212,15 +237,15 @@ function GetStarted() {
       <section className='bg-black h-screen flex items-center px-4 py-10 h-screen px-8 flex flex-col lg:flex-row items-center justify-center gap-20 transition-all duration-1000 ease-in-out'>
         {/* Left Block */}
         <div className='max-w-md text-center lg:text-left'>
-          <h2 className='font-mono text-5xl font-extrabold text-white mb-4'>
+          <h2 className='text-5xl font-extrabold text-white mb-4'>
             STAY INFORMED
             <br />
-            <span className='italic text-cyan-400 text-3xl'>
+            <span className='text-cyan-400 font-bold italic text-3xl'>
               Empower your vote
             </span>
           </h2>
 
-          <p className='font-mono text-lg text-justify text-white mb-6'>
+          <p className='text-lg text-justify text-white mb-6'>
             Explore trusted news sources covering the latest in politics and
             Halalan 2025. Get insights from leading media outlets to make
             informed, value-driven decisions.

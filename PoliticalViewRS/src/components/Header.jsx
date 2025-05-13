@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/Municipal icon.png";
 
 const Header = () => {
   const [showHeader, setShowHeader] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,7 +37,7 @@ const Header = () => {
               className='h-full w-full object-contain'
             />
           </div>
-          <span className='text-white text-xl font-mono transform transition-all mt-2 duration-250  group-hover:-translate-x-10 group-hover:opacity-0 overflow-hidden'>
+          <span className='text-white text-2xl font-mono font-semi transform transition-all mt-2 duration-250  group-hover:-translate-x-10 group-hover:opacity-0 overflow-hidden'>
             PoliTest
           </span>
         </Link>
@@ -56,7 +57,11 @@ const Header = () => {
           <li>
             <Link
               to='/'
-              className='block text-xl text-white font-mono no-underline hover:bg-cyan-300 hover:font-bold hover:text-black transition duration-200 py-2 px-5 rounded-sm text-center'
+              className={`block text-xl no-underline py-2 px-5 rounded-sm text-center transition duration-150 ${
+                location.pathname === "/"
+                  ? "bg-cyan-300 text-black font-bold"
+                  : "text-white hover:bg-cyan-300 hover:text-black font-semibold"
+              }`}
             >
               Home
             </Link>
@@ -64,7 +69,11 @@ const Header = () => {
           <li>
             <Link
               to='/news-sites'
-              className='block text-xl text-white font-mono no-underline hover:bg-cyan-300 hover:font-bold hover:text-black transition duration-200 py-2 px-5 rounded-sm text-center'
+              className={`block text-xl no-underline py-2 px-5 rounded-sm text-center transition duration-150 ${
+                location.pathname === "/news-sites"
+                  ? "bg-cyan-300 text-black font-bold"
+                  : "text-white hover:bg-cyan-300 hover:text-black font-semibold"
+              }`}
             >
               News & Media
             </Link>
@@ -72,98 +81,53 @@ const Header = () => {
           <li>
             <Link
               to='/about'
-              className='block text-xl text-white font-mono no-underline hover:bg-cyan-300 hover:font-bold hover:text-black transition duration-200 py-2 px-5 rounded-sm text-center'
+              className={`block text-xl no-underline py-2 px-5 rounded-sm text-center transition duration-150 ${
+                location.pathname === "/about"
+                  ? "bg-cyan-300 text-black font-bold"
+                  : "text-white hover:bg-cyan-300 hover:text-black font-semibold"
+              }`}
             >
               About Us
             </Link>
           </li>
-          {/* <li>
-            <Link
-              to='/values-beliefs'
-              className='block text-xl text-white font-mono no-underline hover:bg-cyan-300 hover:font-bold hover:text-black transition duration-200 py-2 px-5 rounded-sm text-center'
-            >
-              Profile
-            </Link>
-          </li> */}
         </ul>
-        {/* <Link
-          to={resultExists ? "/result" : "#"}
-          onClick={(e) => {
-            if (!resultExists) {
-              e.preventDefault(); // ❌ stop navigation
-              setShowModal(true); // ✅ open modal
-            }
-          }}
-          className="text-white font-bold bg-[#404040] hover:bg-white hover:text-black transition duration-200 py-2 px-5 rounded-sm hidden md:block cursor-pointer text-center"
-        >
-          {resultExists ? "Your Result" : "Take the Test"}
-        </Link> */}
-
-        {/* Take the Test Button (always visible) */}
-        {/* <button
-          onClick={() =>
-            resultExists ? navigate("/result") : setShowModal(true)
-          }
-          className="text-white font-bold bg-[#404040] hover:bg-white hover:text-black transition duration-200 py-2 px-5 rounded-sm hidden md:block cursor-pointer"
-        >
-          {resultExists ? "Your Result" : "Take the Test"}
-        </button> */}
 
         {/* Mobile Dropdown Menu */}
         {menuOpen && (
           <div className='md:hidden absolute top-full left-0 w-full bg-[#202021] text-white flex flex-col items-center py-4 space-y-2 z-40'>
             <Link
               to='/'
-              className='block text-xl font-mono no-underline hover:bg-white hover:text-black transition duration-200 py-2 px-5 text-center'
+              className={`block text-xl font-mono no-underline py-2 px-5 text-center transition duration-200 ${
+                location.pathname === "/"
+                  ? "bg-cyan-300 text-black font-bold"
+                  : "hover:bg-white hover:text-black"
+              }`}
               onClick={toggleMenu}
             >
               Home
             </Link>
             <Link
               to='/news-sites'
-              className='block text-xl font-mono no-underline hover:bg-white hover:text-black transition duration-200 py-2 px-5 text-center'
+              className={`block text-xl font-mono no-underline py-2 px-5 text-center transition duration-200 ${
+                location.pathname === "/news-sites"
+                  ? "bg-cyan-300 text-black font-bold"
+                  : "hover:bg-white hover:text-black"
+              }`}
               onClick={toggleMenu}
             >
               News & Media
             </Link>
             <Link
               to='/about'
-              className='block text-xl font-mono no-underline hover:bg-white hover:text-black transition duration-200 py-2 px-5 text-center'
+              className={`block text-xl font-mono no-underline py-2 px-5 text-center transition duration-200 ${
+                location.pathname === "/about"
+                  ? "bg-cyan-300 text-black font-bold"
+                  : "hover:bg-white hover:text-black"
+              }`}
               onClick={toggleMenu}
             >
               About Us
             </Link>
-
-            {/* <Link
-              to={resultExists ? "/result" : "#"}
-              onClick={(e) => {
-                if (!resultExists) {
-                  e.preventDefault();
-                  setShowModal(true);
-                }
-                toggleMenu(); // ✅ close mobile menu
-              }}
-              className="bg-[#404040] hover:bg-white hover:text-black cursor-pointer transition duration-200 py-2 px-5 rounded-sm font-bold w-3/4 text-center"
-            >
-              {resultExists ? "Your Result" : "Take the Test"}
-            </Link> */}
-
-            {/* <Link
-              to="/candidate-profile"
-              className="block font-bold no-underline hover:bg-white hover:text-black transition duration-200 py-2 px-5 text-center"
-              onClick={toggleMenu}
-            >
-              Profile
-            </Link> */}
-            {/* <button
-              onClick={() => {
-                resultExists ? navigate("/result") : setShowModal(true);
-                toggleMenu();
-              }}
-              className='!bg-[#404040] hover:bg-white hover:text-black cursor-pointer transition duration-200 py-2 px-5 rounded-sm text-xl font-mono w-3/4'
-            >
-              {resultExists ? "Your Result" : "Take the Test"}
-            </button> */}
           </div>
         )}
       </nav>

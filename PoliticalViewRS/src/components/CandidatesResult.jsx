@@ -20,8 +20,8 @@ const CandidatesResult = ({ name, party, imageUrl }) => {
           className='w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-white object-cover'
         />
         <div>
-          <h2 className='text-white text-4xl font-mono'>{name}</h2>
-          <p className='text-cyan-300 text-2xl mt-1 font-mono italic'>
+          <h2 className='text-white text-4xl font-bold'>{name}</h2>
+          <p className='text-cyan-300 text-2xl mt-1 font-semibold italic'>
             {party}
           </p>
         </div>
@@ -29,7 +29,7 @@ const CandidatesResult = ({ name, party, imageUrl }) => {
 
       {/* Right: Button */}
       <button
-        className='bg-[#303030] cursor-pointer text-white text-xl font-mono px-3 py-2 sm:px-4 sm:py-2 rounded-md hover:font-bold hover:text-black hover:bg-cyan-300 transition disabled:opacity-50'
+        className='bg-[#303030] cursor-pointer text-white text-xl font-semibold px-3 py-2 sm:px-4 sm:py-2 rounded-md hover:font-semibold hover:text-black hover:bg-cyan-300 transition disabled:opacity-50'
         onClick={handleViewMore}
         disabled={!slug}
       >

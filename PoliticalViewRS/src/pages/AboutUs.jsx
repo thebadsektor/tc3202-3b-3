@@ -65,8 +65,8 @@ const AboutUs = () => {
           data-aos='fade-down'
         >
           <div className='flex flex-col items-center justify-center text-center'>
-            <h1 className='text-6xl font-bold font-mono mb-6'>About Us</h1>
-            <p className='font-mono text-white max-w-4xl text-xl mb-10'>
+            <h1 className='text-6xl font-semibold mb-6'>About Us</h1>
+            <p className='text-white max-w-4xl font-semibold text-xl pb-7 mb-10'>
               We’re a team that’s passionate about helping people figure out
               where they stand politically by exploring their core values. With
               a unique questionnaire and smart AI, we connect users with
@@ -77,7 +77,7 @@ const AboutUs = () => {
                 const section = document.getElementById("developer-junie");
                 section?.scrollIntoView({ behavior: "smooth" });
               }}
-              className='text-white font-mono text-2xl border animate-bounce cursor-pointer border-white rounded-full px-6 py-2 hover:bg-cyan-300 hover:text-black transition-all duration-300'
+              className='text-white font-semibold text-2xl border cursor-pointer border-white rounded-full px-6 py-4 hover:bg-cyan-300 hover:text-black transition-all duration-150'
             >
               🡇 Developers
             </button>
@@ -95,13 +95,13 @@ const AboutUs = () => {
               {index % 2 === 0 ? (
                 <>
                   <div className='md:w-1/2 text-center md:text-left mb-8 md:mb-0'>
-                    <h2 className='text-3xl md:text-5xl text-white text-xl font-mono font-bold mb-2'>
+                    <h2 className='text-3xl md:text-5xl text-white font-bold mb-2'>
                       {dev.name}
                     </h2>
-                    <h3 className='text-xl md:text-3xl text-xl font-mono font-style: italic text-cyan-400 mb-6'>
+                    <h3 className='text-xl md:text-3xl font-semibold italic text-cyan-400 mb-6'>
                       {dev.position}
                     </h3>
-                    <p className='font-mono text-xl text-white text-justify'>
+                    <p className='text-2xl text-white text-justify'>
                       {dev.details}
                     </p>
                   </div>
@@ -123,13 +123,13 @@ const AboutUs = () => {
                     />
                   </div>
                   <div className='md:w-1/2 text-center md:text-left'>
-                    <h2 className='text-3xl md:text-5xl text-white font-mono font-bold mb-2'>
+                    <h2 className='text-3xl md:text-5xl text-white font-bold mb-2'>
                       {dev.name}
                     </h2>
-                    <h3 className='text-xl md:text-3xl font-mono font-style: italic text-cyan-400 mb-6'>
+                    <h3 className='text-xl md:text-3xl font-semibold italic text-cyan-400 mb-6'>
                       {dev.position}
                     </h3>
-                    <p className='font-mono text-xl text-white text-justify'>
+                    <p className='text-2xl text-white text-justify'>
                       {dev.details}
                     </p>
                   </div>
