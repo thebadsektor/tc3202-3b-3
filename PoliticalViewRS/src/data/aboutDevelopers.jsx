@@ -1,6 +1,6 @@
 import junieImg from "../assets/Developers/junie.JPG";
 import genesisImg from "../assets/Developers/genesis.jpg";
-import nicksImg from "../assets/Developers/nicole.png";
+import nicksImg from "../assets/Developers/nicks.jpg";
 import gabsImg from "../assets/Developers/gabs.jpg";
 
 const aboutDevelopers = [

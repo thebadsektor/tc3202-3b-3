@@ -79,11 +79,11 @@ Instructions:
 - You may choose any meaningful political values (not limited to a list).
 - For each value:
   - Give a score from 1 (very low) to 5 (very strong).
-  - Explain why this value fits the person.
+  - Explain why this value fits you (talk directly to the user).
   - Do NOT mention or reference any answer number or politician answer number.
   - Write the explanation in a very simple sentence so ordinary people can understand.
 
-At the end, provide an **overall_summary** that explains the person’s general political style in 1-3 very short sentences.
+At the end, provide an **overall_summary** that explains *your* general political style (as if speaking directly to the user) in 1-3 very short sentences.
 
 Return only a valid JSON:
 {{
@@ -92,7 +92,7 @@ Return only a valid JSON:
     {{
       "name": "ValueName",
       "score": 4,
-      "reason": "Simple explanation why this value fits."
+      "reason": "Simple explanation why this value fits you."
     }}
   ]
 }}

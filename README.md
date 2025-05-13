@@ -211,7 +211,7 @@ Another Screenshot
 - **Antopina, Junie**: Lead Developer & Back-End Developer
 - **Delos Reyes, Genesis**: Front-End Developer
 - **Dolorico, Nicole**: Documentation
-- **Gabot, Angelo**: Full Stack Developer
+- **Gabot, Angelo**: Front-End Developer
 - **Gerald Villaran**: Course Instructor
 
 ## Project Timeline
