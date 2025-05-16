@@ -26,7 +26,7 @@ def predict_values_based_on_answers(answers, politician_answers, age, gender, ch
         formatted_answers = "\n".join([f"Answer {i+1}: {a}" for i, a in enumerate(answers)])
         formatted_politicians = "\n".join([f"Politician Answer {i+1}: {a}" for i, a in enumerate(politician_answers)])
 
-        generation_config = {"temperature": 0.4}  # ✅ lower randomness
+        generation_config = {"temperature": 0.4} 
 
         if language.lower() == "tagalog":
             prompt = f"""Batay sa mga sumusunod na impormasyon, tukuyin at i-score ang mga pangunahing pinahahalagahan o paniniwala ng tao.
@@ -52,7 +52,7 @@ Magbigay rin ng **overall_summary** para ilarawan ang estilo ng pananaw ng user 
 
 Ibalik lamang ang JSON:
 {{
-  "overall_summary": "summary dito",
+  "overall_summary": "buod dito",
   "values": [
     {{
       "name": "PangalanNgValue",

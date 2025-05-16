@@ -2,7 +2,7 @@
 python-dotenv  
 
 # Google GenAI API client
-google-genai
+google-generativeai
 
 # Flask web framework and related utilities
 flask 
@@ -13,7 +13,7 @@ concurrently
 
 # Data manipulation and machine learning
 pandas 
-sklearn 
+scikit-learn 
 numpy 
 
 # MongoDB client for Python
