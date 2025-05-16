@@ -78,14 +78,45 @@ npm install
 ```bash
 cd Backend
 python -m venv .venv
-source .venv/Scripts/activate
+.venv\Scripts\activate # cmd
+source .venv/Scripts/activate # Windows or Git Bash
+source .venv/bin/activate # Mac OS or Linux
 pip install -r requirements.txt
 ```
 
-3.  **Configure environment variables (if any)**:
+3.  **Configure environment variables**
+
+- Set up **MongoDB** **—** This system uses **MongoDB** as its database.
+
+  - Log in to [MongoDB Atlas](https://www.mongodb.com/try) 🡄
+  - Create a cluster (1 click).
+  - Create a user with Username & Password.
+  - Whitelist your IP (or allow all).
+  - Copy the provided connection string.
+  - In `Backend` directory, Create a file named `.env` and paste it like
+
+```env
+MONGO_URI=mongodb+srv://<your_user>:<your_pass>@<cluster>.mongodb.net/test?retryWrites=true&w=majority
+```
+
+- Get your API Key **—** Some features require an API key
+  - Get your API key here at [Google AI Studio](https://aistudio.google.com/apikey) 🡄
+  - Log in with your Google account to access Google AI Studio.
+  - Select **Build with the Gemini API** to get your own API key.
+  - Generate and Copy your API key.
+  - With the same `.env` file, paste your generated API key.
+
+```env
+API_KEY=(Paste your API key here)
+MONGO_URI=mongodb+srv://<your_user>:<your_pass>@<cluster>.mongodb.net/test?retryWrites=true&w=majority
+```
+
+- Activate the virtual environment
 
 ```bash
-source .venv/Scripts/activate
+.venv\Scripts\activate # cmd
+source .venv/Scripts/activate # Windows or Git Bash
+source .venv/bin/activate # Mac OS or Linux
 ```
 
 4.  **Run the project:**
@@ -101,7 +132,9 @@ npm run dev
 
 ```bash
 cd Backend/
-source .venv/Scripts/activate
+.venv\Scripts\activate # cmd
+source .venv/Scripts/activate # Windows or Git Bash
+source .venv/bin/activate # Mac OS or Linux
 python server.py
 ```
 
@@ -224,22 +257,9 @@ Another Screenshot
 
 ## Changelog
 
-### [Version 1.0.0] - 2024-09-07
+### [Version 1.0.2] - 2025-05-16
 
-- Initial release of the project.
-- Added basic functionality for [Feature 1], [Feature 2], and [Feature 3].
-
-### [Version 1.1.0] - 2024-09-14
-
-- Improved user interface for [Feature 1].
-- Fixed bugs related to [Feature 2].
-- Updated project documentation with setup instructions.
-
-### [Version 1.2.0] - 2024-09-21
-
-- Added new functionality for [Feature 4].
-- Refactored codebase for better performance.
-- Added unit tests for [Feature 3] and [Feature 4].
+- New prompt in README.md for Mac and Linux
 
 ## Acknowledgments
 
