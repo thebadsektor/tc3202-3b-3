@@ -43,19 +43,20 @@ def parse_gemini_output(text):
 
     for line in lines:
         line = line.strip()
-        if line.startswith("Full Name:"):
+        # ✅ Match both regular and markdown bolded headers
+        if re.match(r"\*?\*?Full Name:.*", line):
             if current_name:
                 parsed.append((current_name, current_score, current_reason.strip()))
-            current_name = line.replace("Full Name:", "").strip()
+            current_name = re.sub(r"\*?\*?Full Name:\*?\*?", "", line).strip()
             current_score = 0
             current_reason = ""
-        elif line.startswith("Score:"):
+        elif re.match(r"\*?\*?Score:.*", line):
             try:
-                current_score = int(line.replace("Score:", "").strip())
+                current_score = int(re.sub(r"\*?\*?Score:\*?\*?", "", line).strip())
             except:
                 current_score = 0
-        elif line.startswith("Reason:"):
-            current_reason = line.replace("Reason:", "").strip()
+        elif re.match(r"\*?\*?Reason:.*", line):
+            current_reason = re.sub(r"\*?\*?Reason:\*?\*?", "", line).strip()
         elif current_reason != "":
             current_reason += " " + line
 

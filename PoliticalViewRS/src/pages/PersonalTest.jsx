@@ -97,6 +97,7 @@ const PersonalTest = () => {
     if (!text) return "";
     return text
       .replace(/^Topic\s*:\s*\[statements about\]\s*/i, "")
+      .replace(/^Topic\s*:\s*/i, "")
       .replace(/^\[|\]$/, "")
 
       .split(" ")
@@ -242,6 +243,8 @@ const PersonalTest = () => {
           <GenderSet
             onSelectGender={(gender) => {
               const chatId = uuidv4();
+              const language =
+                localStorage.getItem("selectedLanguage") || "english";
               navigate("/result", {
                 state: {
                   userAnswers,
@@ -249,6 +252,7 @@ const PersonalTest = () => {
                   age: ageAnswer,
                   gender,
                   chatId,
+                  language,
                 },
               });
             }}

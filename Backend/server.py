@@ -55,13 +55,15 @@ def predict_values(chatId):
     politician_answers = data.get("politicianAnswers", [])
     age = data.get("age", None)
     gender = data.get("gender", None)
+    language = data.get("language", "english")  # ✅ Add this line
 
     values = predict_values_based_on_answers(
         answers,
         politician_answers,
         age,
         gender,
-        chat_id=chatId   # use this chatId
+        chat_id=chatId,
+        language=language  # ✅ Pass to function
     )
     return jsonify(values)
     cd

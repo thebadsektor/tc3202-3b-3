@@ -5,7 +5,7 @@ import CandidatesResult from "../components/CandidatesResult";
 const Result = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { userAnswers, politicianAnswers, age, gender, chatId } =
+  const { userAnswers, politicianAnswers, age, gender, chatId, language } =
     location.state || {};
 
   const [predictedValues, setPredictedValues] = useState({});
@@ -63,6 +63,7 @@ const Result = () => {
               politicianAnswers,
               age,
               gender,
+              language,
             }),
           }
         );
@@ -117,7 +118,7 @@ const Result = () => {
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ chatId }),
+            body: JSON.stringify({ chatId, language }),
           }
         );
 
@@ -212,52 +213,67 @@ const Result = () => {
             </h2>
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
               {Array.isArray(predictedValues?.values) &&
-                predictedValues.values.map((item, index) => {
-                  const { name, score, reason } = item;
-                  const percentage = (score / 5) * 100;
-                  const scoreDescriptions = {
-                    1: "Very low presence",
-                    2: "Low presence",
-                    3: "Moderate presence",
-                    4: "High presence",
-                    5: "Very strong presence",
-                  };
+                (() => {
+                  const sorted = [...predictedValues.values].sort(
+                    (a, b) => b.score - a.score
+                  );
+                  const half = Math.ceil(sorted.length / 2);
+                  const column1 = sorted.slice(0, half);
+                  const column2 = sorted.slice(half);
+                  const columnWiseSorted = [];
 
-                  return (
-                    <li
-                      key={index}
-                      className="flex flex-col text-white font-mono text-xl space-y-2"
-                    >
-                      {/* ✅ Hover ONLY on text */}
-                      <span className="relative group capitalize cursor-pointer">
-                        {name}
-                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 text-sm bg-black text-white rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-normal z-20 text-center">
-                          {reason}
-                        </div>
-                      </span>
+                  for (let i = 0; i < half; i++) {
+                    if (column1[i]) columnWiseSorted.push(column1[i]);
+                    if (column2[i]) columnWiseSorted.push(column2[i]);
+                  }
 
-                      <div className="flex items-center space-x-4">
-                        <div className="relative h-1 bg-cyan-900 rounded-full overflow-visible flex-1">
-                          <div
-                            className="h-full bg-cyan-400 transition-all duration-300 rounded-full"
-                            style={{ width: `${percentage}%` }}
-                          />
-                          <div
-                            className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-cyan-300 border-2 border-white rounded-full z-10 group"
-                            style={{ left: `calc(${percentage}% - 8px)` }}
-                          >
-                            <div className="absolute -top-10 left-1/2 -translate-x-1/2 px-2 py-1 text-xs bg-black text-white rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap z-20">
-                              {scoreDescriptions[score]}
+                  return columnWiseSorted.map((item, index) => {
+                    const { name, score, reason } = item;
+                    const percentage = (score / 5) * 100;
+                    const scoreDescriptions = {
+                      1: "Very low presence",
+                      2: "Low presence",
+                      3: "Moderate presence",
+                      4: "High presence",
+                      5: "Very strong presence",
+                    };
+
+                    return (
+                      <li
+                        key={index}
+                        className="flex flex-col text-white font-mono text-xl space-y-2"
+                      >
+                        {/* ✅ Hover ONLY on text */}
+                        <span className="relative group capitalize cursor-pointer">
+                          {name}
+                          <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 text-sm bg-black text-white rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-normal z-20 text-center">
+                            {reason}
+                          </div>
+                        </span>
+
+                        <div className="flex items-center space-x-4">
+                          <div className="relative h-1 bg-cyan-900 rounded-full overflow-visible flex-1">
+                            <div
+                              className="h-full bg-cyan-400 transition-all duration-300 rounded-full"
+                              style={{ width: `${percentage}%` }}
+                            />
+                            <div
+                              className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-cyan-300 border-2 border-white rounded-full z-10 group"
+                              style={{ left: `calc(${percentage}% - 8px)` }}
+                            >
+                              <div className="absolute -top-10 left-1/2 -translate-x-1/2 px-2 py-1 text-xs bg-black text-white rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap z-20">
+                                {scoreDescriptions[score]}
+                              </div>
                             </div>
                           </div>
+                          <span className="text-md p-1 text-white font-bold w-10 text-right">
+                            {score}/5
+                          </span>
                         </div>
-                        <span className="text-md p-1 text-white font-bold w-10 text-right">
-                          {score}/5
-                        </span>
-                      </div>
-                    </li>
-                  );
-                })}
+                      </li>
+                    );
+                  });
+                })()}
             </ul>
           </div>
 
