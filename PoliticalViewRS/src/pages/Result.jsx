@@ -17,6 +17,7 @@ const Result = () => {
   const [fetchedAnalysis, setFetchedAnalysis] = useState(false);
   const [similarArticles, setSimilarArticles] = useState([]);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [expandedIndex, setExpandedIndex] = useState(null);
 
   useEffect(() => {
     document.title = "Your Result";
@@ -175,6 +176,10 @@ const Result = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const toggleReason = (i) => {
+    setExpandedIndex((prev) => (prev === i ? null : i));
+  };
+
   return (
     <main className="min-h-screen bg-[#000] text-white flex flex-col ">
       {/* Scroll Progress Bar */}
@@ -316,9 +321,30 @@ const Result = () => {
                         party={candidate.party}
                         imageUrl={candidate.imageUrl}
                       />
-                      <p className="bg-[#303030] text-lg text-white/80 p-6 rounded-b-lg text-justify">
-                        {candidate.reason}
-                      </p>
+
+                      {/* Container for button and paragraph */}
+                      <div className="bg-[#303030] rounded-b-lg overflow-hidden">
+                        <div
+                          className={`transition-all duration-500 ease-in-out overflow-hidden ${
+                            expandedIndex === index
+                              ? "max-h-[500px] opacity-100"
+                              : "max-h-0 opacity-0"
+                          }`}
+                        >
+                          <p className="text-lg text-white/80 p-6 text-justify">
+                            {candidate.reason}
+                          </p>
+                        </div>
+
+                        <button
+                          onClick={() => toggleReason(index)}
+                          className="w-full text-cyan-300 text-right font-semibold px-6 py-4 hover:text-yellow-300 transition duration-300"
+                        >
+                          {expandedIndex === index
+                            ? "Close"
+                            : "Click here why?"}
+                        </button>
+                      </div>
                     </div>
                   ))
                 ) : (
